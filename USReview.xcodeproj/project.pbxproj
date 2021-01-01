@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -65,16 +65,48 @@
 		17DAD206259F33D9001C6AE0 /* USReview */ = {
 			isa = PBXGroup;
 			children = (
+				17DAD25F259F3D16001C6AE0 /* Models */,
+				17DAD261259F3D24001C6AE0 /* ViewControllers */,
+				17DAD262259F3D27001C6AE0 /* Storyboards */,
+				17DAD260259F3D22001C6AE0 /* Helpers */,
 				17DAD207259F33D9001C6AE0 /* AppDelegate.swift */,
 				17DAD209259F33D9001C6AE0 /* SceneDelegate.swift */,
-				17DAD20B259F33D9001C6AE0 /* ViewController.swift */,
-				17DAD20D259F33D9001C6AE0 /* Main.storyboard */,
 				17DAD210259F33E3001C6AE0 /* Assets.xcassets */,
-				17DAD212259F33E3001C6AE0 /* LaunchScreen.storyboard */,
 				17DAD215259F33E3001C6AE0 /* Info.plist */,
 				17DAD21C259F34AB001C6AE0 /* GoogleService-Info.plist */,
 			);
 			path = USReview;
+			sourceTree = "<group>";
+		};
+		17DAD25F259F3D16001C6AE0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		17DAD260259F3D22001C6AE0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		17DAD261259F3D24001C6AE0 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				17DAD20B259F33D9001C6AE0 /* ViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		17DAD262259F3D27001C6AE0 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				17DAD20D259F33D9001C6AE0 /* Main.storyboard */,
+				17DAD212259F33E3001C6AE0 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 		183099012DFD63CE68B6EC8B /* Frameworks */ = {
@@ -91,7 +123,6 @@
 				73C87214BFA34447DC6651C2 /* Pods-USReview.debug.xcconfig */,
 				FEDB5994E909CCC7A9DC3FDB /* Pods-USReview.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
