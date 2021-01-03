@@ -19,8 +19,8 @@ class ProfileViewController: UIViewController {
 
     @IBAction func logoutButtonTapped(_ sender: Any) {
         try! Auth.auth().signOut()
-        let loginViewController = UIStoryboard.loginViewController()
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginViewController!)
+        let loginNavigationController = UIStoryboard.loginNavigationController()
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
     }
     
 }

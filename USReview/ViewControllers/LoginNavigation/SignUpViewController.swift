@@ -13,7 +13,7 @@ import var CommonCrypto.CC_MD5_DIGEST_LENGTH
 import func CommonCrypto.CC_MD5
 import typealias CommonCrypto.CC_LONG
 
-class SignUpViewController: UIViewController {
+class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var schoolTextField: UITextField!
@@ -29,6 +29,18 @@ class SignUpViewController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        nameTextField.tag = 0
+        schoolTextField.tag = 1
+        genderTextField.tag = 2
+        emailTextField.tag = 3
+        passwordTextField.tag = 4
+        
+        nameTextField.delegate = self
+        schoolTextField.delegate = self
+        genderTextField.delegate = self
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,6 +73,8 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
+        self.dismissKeyboard()
+        
         if nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             schoolTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             genderTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
@@ -108,6 +122,23 @@ class SignUpViewController: UIViewController {
                 }
             }
         }
+    }
+
+    // MARK: - UITextFieldDelegate
+    private func tagBasedTextField(_ textField: UITextField) {
+        let nextTextFieldTag = textField.tag + 1
+        
+        if let nextTextField = textField.superview?.viewWithTag(nextTextFieldTag) as? UITextField {
+            nextTextField.becomeFirstResponder()
+        }
+        else {
+            textField.resignFirstResponder()
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.tagBasedTextField(textField)
+        return true
     }
     
 }

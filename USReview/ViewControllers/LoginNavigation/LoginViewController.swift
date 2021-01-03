@@ -9,7 +9,7 @@ import UIKit
 import JGProgressHUD
 import Firebase
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -24,6 +24,12 @@ class LoginViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        emailTextField.tag = 0
+        passwordTextField.tag = 1
+    
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,6 +55,8 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButtonTapped(_ sender: Any) {
+        self.dismissKeyboard()
+        
         hud.textLabel.text = "Logging in..."
         hud.show(in: self.view)
         
@@ -66,6 +74,23 @@ class LoginViewController: UIViewController {
                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
             }
         }  
+    }
+    
+    // MARK: - UITextFieldDelegate
+    private func tagBasedTextField(_ textField: UITextField) {
+        let nextTextFieldTag = textField.tag + 1
+        
+        if let nextTextField = textField.superview?.viewWithTag(nextTextFieldTag) as? UITextField {
+            nextTextField.becomeFirstResponder()
+        }
+        else {
+            textField.resignFirstResponder()
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.tagBasedTextField(textField)
+        return true
     }
     
 }
