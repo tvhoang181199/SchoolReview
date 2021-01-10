@@ -36,9 +36,9 @@ class AppTabBar: UITabBar {
     }
 
     func createPath() -> CGPath {
-        print(self.frame.height)
         let height: CGFloat = 30
         let path = UIBezierPath()
+            
         let centerWidth = self.frame.width / 2
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: (centerWidth - height ), y: 0))
@@ -64,7 +64,7 @@ class AppTabBar: UITabBar {
 extension UITabBar {
     override open func sizeThatFits(_ size: CGSize) -> CGSize {
         var sizeThatFits = super.sizeThatFits(size)
-        sizeThatFits.height = 74
+        sizeThatFits.height = 49
         return sizeThatFits
     }
 }
