@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route, useHistory } from "react-router-dom";
 import { actions } from "./redux";
 import { useDispatch, useSelector } from "react-redux";
+import { auth, db } from "./services/firebase";
 import Header from "./components/Header";
 import Profile from "./pages/Auth/Profile";
 import Signin from "./pages/Auth/Signin";
@@ -28,6 +29,18 @@ const Routing = () => {
   //     fetchData(user, token);
   //   }
   // }, []);
+
+  const fetchBlogs = async () => {
+    const response = db.collection("users");
+    const data = await response.get();
+    data.docs.forEach((item) => {
+      console.log({ item });
+    });
+  };
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
 
   return (
     <Switch>

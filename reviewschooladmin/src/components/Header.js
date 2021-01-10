@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     fontSize: 24,
-    fontFamily: "Playball",
     "& > a": {
       color: "white",
       "&:hover": {
