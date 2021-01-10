@@ -13,16 +13,19 @@ import var CommonCrypto.CC_MD5_DIGEST_LENGTH
 import func CommonCrypto.CC_MD5
 import typealias CommonCrypto.CC_LONG
 
-class SignUpViewController: UIViewController, UITextFieldDelegate {
+class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerViewDelegate, UIPickerViewDataSource{
     
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var schoolTextField: UITextField!
-    @IBOutlet weak var genderTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
     let hud = JGProgressHUD(style: .dark)
     let db = Firestore.firestore()
+    
+    
+    var picker = UIPickerView()
+    let listSchool = ["Khoa học tự nhiên","Khoa học xã hội và nhân văn", "Kinh tế Luật", "Công nghệ thông tin"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,15 +35,16 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         
         nameTextField.tag = 0
         schoolTextField.tag = 1
-        genderTextField.tag = 2
-        emailTextField.tag = 3
-        passwordTextField.tag = 4
+        emailTextField.tag = 2
+        passwordTextField.tag = 3
         
         nameTextField.delegate = self
         schoolTextField.delegate = self
-        genderTextField.delegate = self
         emailTextField.delegate = self
         passwordTextField.delegate = self
+        
+        picker.delegate = self
+        schoolTextField.inputView = picker
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,6 +54,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             [NSAttributedString.Key.foregroundColor: UIColor.init(red: 42/255, green: 51/255, blue: 66/255, alpha: 1),
              NSAttributedString.Key.font: UIFont(name: "GillSans-SemiBold", size: 20)!]
     }
+    
     
     func MD5(string: String) -> Data {
         let length = Int(CC_MD5_DIGEST_LENGTH)
@@ -77,7 +82,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         
         if nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             schoolTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            genderTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
             Toast.show(message: "Please fill all information!", controller: self)
@@ -105,7 +109,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 self.db.collection("users").document(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)).setData([
                     "name":self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
                     "school":self.schoolTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
-                    "gender":self.genderTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
                     "email":self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
                     "password":md5Base64Password,
                     "uid":result!.user.uid
@@ -141,4 +144,33 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
+    
+    // UIPickerView
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return listSchool.count
+    }
+    func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+     return listSchool[row]
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+      
+       schoolTextField.text = listSchool[row]
+       }
+    func dismissPickerView() {
+          let toolBar = UIToolbar()
+          toolBar.sizeToFit()
+           let button = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(self.action))
+           toolBar.setItems([button], animated: true)
+           toolBar.isUserInteractionEnabled = true
+           schoolTextField.inputAccessoryView = toolBar
+       }
+       @objc func action() {
+             view.endEditing(true)
+       }
 }
+
