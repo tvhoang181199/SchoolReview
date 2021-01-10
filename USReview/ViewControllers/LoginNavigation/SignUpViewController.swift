@@ -23,8 +23,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
     let hud = JGProgressHUD(style: .dark)
     let db = Firestore.firestore()
     
+    var schoolID: String? = ""
     
-    var picker = UIPickerView()
     let listSchool = ["Khoa học tự nhiên","Khoa học xã hội và nhân văn", "Kinh tế Luật", "Công nghệ thông tin"]
     
     override func viewDidLoad() {
@@ -42,9 +42,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
         schoolTextField.delegate = self
         emailTextField.delegate = self
         passwordTextField.delegate = self
-        
-        picker.delegate = self
-        schoolTextField.inputView = picker
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,9 +105,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
             else {
                 self.db.collection("users").document(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)).setData([
                     "name":self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
-                    "school":self.schoolTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
+                    "schoolID":self.schoolID!,
                     "email":self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
                     "password":md5Base64Password,
+                    "isVerified": 0,
+                    "role": 0,
                     "uid":result!.user.uid
                 ]) { (error) in
                     if error != nil {
@@ -126,7 +125,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
             }
         }
     }
-
+    
     // MARK: - UITextFieldDelegate
     private func tagBasedTextField(_ textField: UITextField) {
         let nextTextFieldTag = textField.tag + 1
@@ -144,6 +143,14 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
         return true
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if (textField.tag == 1) {
+            let picker = UIPickerView()
+            picker.delegate = self
+            textField.inputView = picker
+        }
+    }
+    
     
     // UIPickerView
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -154,23 +161,24 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
         return listSchool.count
     }
     func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-     return listSchool[row]
+        return listSchool[row]
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-      
-       schoolTextField.text = listSchool[row]
-       }
+        
+        schoolTextField.text = listSchool[row]
+        schoolID = "S00\(row)"
+    }
     func dismissPickerView() {
-          let toolBar = UIToolbar()
-          toolBar.sizeToFit()
-           let button = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(self.action))
-           toolBar.setItems([button], animated: true)
-           toolBar.isUserInteractionEnabled = true
-           schoolTextField.inputAccessoryView = toolBar
-       }
-       @objc func action() {
-             view.endEditing(true)
-       }
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let button = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(self.action))
+        toolBar.setItems([button], animated: true)
+        toolBar.isUserInteractionEnabled = true
+        schoolTextField.inputAccessoryView = toolBar
+    }
+    @objc func action() {
+        view.endEditing(true)
+    }
 }
 
