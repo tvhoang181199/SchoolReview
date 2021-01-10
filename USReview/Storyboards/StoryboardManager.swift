@@ -22,12 +22,16 @@ extension UIStoryboard {
         return mainStoryboard().instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController
     }
     
-    class func mainTabbarController() -> UIViewController? {
-        return mainStoryboard().instantiateViewController(withIdentifier: "MainTabbarController")
+    class func mainTabBarController() -> MainTabBarController? {
+        return mainStoryboard().instantiateViewController(withIdentifier: "MainTabBarController") as? MainTabBarController
     }
     
     class func loginNavigationController() -> UIViewController? {
         return mainStoryboard().instantiateViewController(withIdentifier: "LoginNavigationController")
+    }
+    
+    class func addPostViewController() -> AddPostViewController? {
+        return mainStoryboard().instantiateViewController(withIdentifier: "AddPostViewController") as? AddPostViewController
     }
     
 }

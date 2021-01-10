@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17ADC79225AB08B900EE003D /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC79125AB08B900EE003D /* MainTabBarController.swift */; };
+		17ADC7B025AB098300EE003D /* AppTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC7AF25AB098300EE003D /* AppTabBar.swift */; };
+		17ADC7B725AB160F00EE003D /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC7B625AB160F00EE003D /* AddPostViewController.swift */; };
 		17DAD208259F33D9001C6AE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DAD207259F33D9001C6AE0 /* AppDelegate.swift */; };
 		17DAD20A259F33D9001C6AE0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DAD209259F33D9001C6AE0 /* SceneDelegate.swift */; };
 		17DAD20F259F33D9001C6AE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17DAD20D259F33D9001C6AE0 /* Main.storyboard */; };
@@ -25,6 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17ADC79125AB08B900EE003D /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		17ADC7AF25AB098300EE003D /* AppTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabBar.swift; sourceTree = "<group>"; };
+		17ADC7B625AB160F00EE003D /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
 		17DAD204259F33D9001C6AE0 /* USReview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = USReview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17DAD207259F33D9001C6AE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17DAD209259F33D9001C6AE0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -113,7 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				17DAD29F25A14004001C6AE0 /* LoginNavigation */,
-				17DAD2A025A14007001C6AE0 /* MainTabbar */,
+				17DAD2A025A14007001C6AE0 /* MainTabBar */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -137,13 +143,16 @@
 			path = LoginNavigation;
 			sourceTree = "<group>";
 		};
-		17DAD2A025A14007001C6AE0 /* MainTabbar */ = {
+		17DAD2A025A14007001C6AE0 /* MainTabBar */ = {
 			isa = PBXGroup;
 			children = (
+				17ADC7AF25AB098300EE003D /* AppTabBar.swift */,
+				17ADC79125AB08B900EE003D /* MainTabBarController.swift */,
 				17DAD29325A134E5001C6AE0 /* HomeViewController.swift */,
 				17DAD29625A134F8001C6AE0 /* ProfileViewController.swift */,
+				17ADC7B625AB160F00EE003D /* AddPostViewController.swift */,
 			);
-			path = MainTabbar;
+			path = MainTabBar;
 			sourceTree = "<group>";
 		};
 		183099012DFD63CE68B6EC8B /* Frameworks */ = {
@@ -282,8 +291,11 @@
 				17DAD27425A1280B001C6AE0 /* Extensions.swift in Sources */,
 				17DAD29725A134F8001C6AE0 /* ProfileViewController.swift in Sources */,
 				17DAD208259F33D9001C6AE0 /* AppDelegate.swift in Sources */,
+				17ADC7B725AB160F00EE003D /* AddPostViewController.swift in Sources */,
 				17DAD26725A0C70C001C6AE0 /* SignUpViewController.swift in Sources */,
 				17DAD20A259F33D9001C6AE0 /* SceneDelegate.swift in Sources */,
+				17ADC79225AB08B900EE003D /* MainTabBarController.swift in Sources */,
+				17ADC7B025AB098300EE003D /* AppTabBar.swift in Sources */,
 				17DAD29425A134E5001C6AE0 /* HomeViewController.swift in Sources */,
 				17DAD27125A0EED6001C6AE0 /* StoryboardManager.swift in Sources */,
 				17DAD27725A1296E001C6AE0 /* Toast.swift in Sources */,

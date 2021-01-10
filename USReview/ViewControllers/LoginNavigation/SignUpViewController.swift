@@ -25,7 +25,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
     
     var schoolID: String? = ""
     
-    let listSchool = ["Khoa học tự nhiên","Khoa học xã hội và nhân văn", "Kinh tế Luật", "Công nghệ thông tin"]
+    let schoolList = ["Khoa học tự nhiên","Khoa học xã hội và nhân văn", "Kinh tế Luật", "Công nghệ thông tin"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,7 +118,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
                     }
                     else {
                         self.hud.dismiss()
-                        let mainTabBarController = UIStoryboard.mainTabbarController()
+                        let mainTabBarController = UIStoryboard.mainTabBarController()
                         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
                     }
                 }
@@ -148,9 +148,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
             let picker = UIPickerView()
             picker.delegate = self
             textField.inputView = picker
+            picker.selectRow(0, inComponent: 0, animated: true)
+            schoolID = "S001"
+            textField.text = schoolList[0]
         }
     }
-    
     
     // UIPickerView
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -158,15 +160,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return listSchool.count
+        return schoolList.count
     }
     func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return listSchool[row]
+        return schoolList[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        schoolTextField.text = listSchool[row]
+        schoolTextField.text = schoolList[row]
         schoolID = "S00\(row)"
     }
     func dismissPickerView() {

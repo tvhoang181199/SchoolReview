@@ -70,7 +70,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
             else {
                 self.hud.dismiss()
-                let mainTabBarController = UIStoryboard.mainTabbarController()
+                let mainTabBarController = UIStoryboard.mainTabBarController()
                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
             }
         }  

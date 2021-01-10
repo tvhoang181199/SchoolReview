@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         
         if (Auth.auth().currentUser != nil) {
-            let mainTabBarController = UIStoryboard.mainTabbarController()
+            let mainTabBarController = UIStoryboard.mainTabBarController()
             window?.rootViewController = mainTabBarController
         }
         else {

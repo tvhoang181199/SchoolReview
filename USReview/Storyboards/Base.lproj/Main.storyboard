@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -221,7 +222,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vWg-d4-ukK">
-                                <rect key="frame" x="132" y="748" width="150" height="40"/>
+                                <rect key="frame" x="132" y="723" width="150" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="3PN-dw-JPZ"/>
                                     <constraint firstAttribute="width" constant="150" id="Fy1-RY-Ms2"/>
@@ -239,7 +240,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="vWg-d4-ukK" firstAttribute="centerX" secondItem="Bal-FK-wBY" secondAttribute="centerX" id="63z-OF-six"/>
-                            <constraint firstItem="Bal-FK-wBY" firstAttribute="bottom" secondItem="vWg-d4-ukK" secondAttribute="bottom" constant="25" id="n5H-Od-lAZ"/>
+                            <constraint firstItem="Bal-FK-wBY" firstAttribute="bottom" secondItem="vWg-d4-ukK" secondAttribute="bottom" constant="50" id="n5H-Od-lAZ"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Profile" image="person" catalog="system" selectedImage="person.fill" id="Ph9-fn-V6h"/>
@@ -266,11 +267,72 @@
             </objects>
             <point key="canvasLocation" x="3883" y="-265"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Add Post View Controller-->
+        <scene sceneID="Apc-gD-WCP">
+            <objects>
+                <viewController storyboardIdentifier="AddPostViewController" id="MyY-4w-aw0" customClass="AddPostViewController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Nq3-yw-ssM">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aYT-dh-4R5">
+                                <rect key="frame" x="49" y="406" width="316" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="94" id="6t4-35-SLD"/>
+                                    <constraint firstAttribute="width" constant="316" id="9eA-kC-p0T"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nIX-EO-rcd">
+                                <rect key="frame" x="25" y="69" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="2Ak-DH-J9m"/>
+                                    <constraint firstAttribute="height" constant="25" id="Y9T-4T-aAQ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="37"/>
+                                <color key="tintColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="large"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="large" weight="bold"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeButtonTapped:" destination="MyY-4w-aw0" eventType="touchUpInside" id="pIY-wa-QZp"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADD POST" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iaq-Ig-i7N">
+                                <rect key="frame" x="65" y="44" width="284" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="75" id="P8N-Kv-e3C"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="GillSans-Bold" family="Gill Sans" pointSize="20"/>
+                                <color key="textColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="9Hn-Il-2Lo"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="9Hn-Il-2Lo" firstAttribute="trailing" secondItem="Iaq-Ig-i7N" secondAttribute="trailing" constant="65" id="SGB-Bc-eSd"/>
+                            <constraint firstItem="nIX-EO-rcd" firstAttribute="leading" secondItem="9Hn-Il-2Lo" secondAttribute="leading" constant="25" id="Y7E-2I-fDl"/>
+                            <constraint firstItem="nIX-EO-rcd" firstAttribute="top" secondItem="9Hn-Il-2Lo" secondAttribute="top" constant="25" id="enk-cW-95y"/>
+                            <constraint firstItem="Iaq-Ig-i7N" firstAttribute="top" secondItem="9Hn-Il-2Lo" secondAttribute="top" id="k7c-jb-l9t"/>
+                            <constraint firstItem="aYT-dh-4R5" firstAttribute="centerX" secondItem="9Hn-Il-2Lo" secondAttribute="centerX" id="kZQ-wG-H1T"/>
+                            <constraint firstItem="Iaq-Ig-i7N" firstAttribute="leading" secondItem="nIX-EO-rcd" secondAttribute="trailing" constant="15" id="qda-F1-dQM"/>
+                            <constraint firstItem="aYT-dh-4R5" firstAttribute="centerY" secondItem="9Hn-Il-2Lo" secondAttribute="centerY" id="xcl-AO-zY4"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zAz-U2-j3x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4779.7101449275369" y="64.955357142857139"/>
+        </scene>
+        <!--Main Tab Bar Controller-->
         <scene sceneID="Pmk-zk-GS9">
             <objects>
-                <tabBarController storyboardIdentifier="MainTabbarController" id="9Ow-8g-6pN" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="k0S-Dk-Tup">
+                <tabBarController storyboardIdentifier="MainTabBarController" id="9Ow-8g-6pN" customClass="MainTabBarController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="k0S-Dk-Tup" customClass="AppTabBar" customModule="USReview" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -305,12 +367,18 @@
             <point key="canvasLocation" x="-1.4492753623188408" y="64.955357142857139"/>
         </scene>
     </scenes>
+    <designables>
+        <designable name="k0S-Dk-Tup">
+            <size key="intrinsicContentSize" width="-1" height="83"/>
+        </designable>
+    </designables>
     <color key="tintColor" red="0.1647058824" green="0.1985827386" blue="0.25883167979999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
         <image name="house" catalog="system" width="128" height="106"/>
         <image name="house.fill" catalog="system" width="128" height="106"/>
         <image name="person" catalog="system" width="128" height="117"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
