@@ -1,24 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import "./App.css";
+import { BrowserRouter as Router, Switch, Route, useHistory } from "react-router-dom";
+import { actions } from "./redux";
+import { useDispatch, useSelector } from "react-redux";
+import Header from "./components/Header";
+import Profile from "./pages/Auth/Profile";
+import Signin from "./pages/Auth/Signin";
+
+const Routing = () => {
+  // const history = useHistory();
+  // const dispatch = useDispatch();
+
+  // const fetchData = async (user, token) => {
+  //   const boards = await boardApi.getBoards(token);
+  //   const cards = await cardApi.getCards(token);
+  //   const data = { boards, cards };
+  //   dispatch(actions.getAllNecessaryData(data));
+  //   dispatch(actions.signin({ user, token }));
+  // };
+
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("user"));
+  //   const token = JSON.parse(localStorage.getItem("token"));
+  //   if (!user && !token) {
+  //     history.push("/signin");
+  //   } else {
+  //     fetchData(user, token);
+  //   }
+  // }, []);
+
+  return (
+    <Switch>
+      <Route path="/" exact component={Signin} />
+      <Route path="/profile" exact component={Profile} />
+      {/* <Route path="/" exact component={Board} /> */}
+      {/* <Route path="/:id" component={BoardView} /> */}
+      <Route redirect="/signin" />
+    </Switch>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header />
+      <Routing />
+    </Router>
   );
 }
 
