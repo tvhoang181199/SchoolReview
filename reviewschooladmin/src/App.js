@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Switch, Route, useHistory } from "react-router
 import { actions } from "./redux";
 import { useDispatch, useSelector } from "react-redux";
 import { auth, db } from "./services/firebase";
-import Header from "./components/Header";
 import Profile from "./pages/Auth/Profile";
 import Signin from "./pages/Auth/Signin";
+import AdminLayout from "./components/AdminLayout";
+import Dashboard from "./pages/Dashboard";
 
-const Routing = () => {
+const Routing = (props) => {
   // const history = useHistory();
   // const dispatch = useDispatch();
 
@@ -42,22 +43,34 @@ const Routing = () => {
     fetchBlogs();
   }, []);
 
-  return (
-    <Switch>
-      <Route path="/" exact component={Signin} />
-      <Route path="/profile" exact component={Profile} />
-      {/* <Route path="/" exact component={Board} /> */}
-      {/* <Route path="/:id" component={BoardView} /> */}
-      <Route redirect="/signin" />
-    </Switch>
-  );
+  if (props.isAuthenticated) {
+    return (
+      <AdminLayout>
+        <Switch>
+          <Route path="/" exact component={Dashboard} />
+          <Route path="/profile" exact component={Profile} />
+          {/* <Route path="/" exact component={Board} /> */}
+          {/* <Route path="/:id" component={BoardView} /> */}
+          <Route redirect="/signin" />
+        </Switch>
+      </AdminLayout>
+    );
+  } else {
+    return (
+      <Switch>
+        <Route path="/" exact component={Signin} />
+        <Route redirect="/" />
+      </Switch>
+    );
+  }
 };
 
 function App() {
+  const isAuthenticated = useSelector((state) => state.app.isAuthenticated);
+
   return (
     <Router>
-      <Header />
-      <Routing />
+      <Routing isAuthenticated={isAuthenticated} />
     </Router>
   );
 }
