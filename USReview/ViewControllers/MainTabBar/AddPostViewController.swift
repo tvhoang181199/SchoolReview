@@ -79,9 +79,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
                 if let error = error {
                     Toast.show(message: error.localizedDescription, controller: self)
                 }
-                else {
-                    dispatchGroup.leave()
-                }
+                dispatchGroup.leave()
             }
             
             //Create post in posts
@@ -93,11 +91,9 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
                                                              "createdDate": Date()
             ]) { (error) in
                 if let error = error {
-                    SCLAlertView().showError("Error", subTitle: error.localizedDescription)
+                    Toast.show(message: error.localizedDescription, controller: self)
                 }
-                else {
-                    dispatchGroup.leave()
-                }
+                dispatchGroup.leave()
             }
             
             // Dismiss and alert
