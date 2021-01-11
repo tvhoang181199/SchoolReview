@@ -11,27 +11,27 @@ class User {
     var name: String? = ""
     var schoolID: String? = ""
     var email: String? = ""
-    var uid: String? = ""
+    var userID: String? = ""
     var isVerified: Int? = 0
     var role: Int? = 0
     
     init(){
     }
     
-    init(name: String?, schoolID: String?, email: String?, uid: String?, isVerified: Int?, role: Int?){
+    init(name: String?, schoolID: String?, email: String?, userID: String?, isVerified: Int?, role: Int?){
         self.name = name
         self.schoolID = schoolID
         self.email = email
-        self.uid = uid
+        self.userID = userID
         self.isVerified = isVerified
         self.role = role
     }
     
-    func setUser(name: String?, schoolID: String?, email: String?, uid: String?, isVerified: Int?, role: Int?) {
+    func setUser(name: String?, schoolID: String?, email: String?, userID: String?, isVerified: Int?, role: Int?) {
         self.name = name
         self.schoolID = schoolID
         self.email = email
-        self.uid = uid
+        self.userID = userID
         self.isVerified = isVerified
         self.role = role
     }

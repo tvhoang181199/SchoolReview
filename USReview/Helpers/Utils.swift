@@ -14,11 +14,11 @@ class Utils: NSObject {
         return (password.count<8) ? false : true
     }
     
-    static func setUserDefaults(name: String, schoolID: String, email: String, uid: String, role: Int, isVerified:Int) {
+    static func setUserDefaults(name: String, schoolID: String, email: String, userID: String, role: Int, isVerified:Int) {
         UserDefaults.standard.set(name, forKey: "name")
         UserDefaults.standard.set(schoolID, forKey: "schoolID")
         UserDefaults.standard.set(email, forKey: "email")
-        UserDefaults.standard.set(uid, forKey: "uid")
+        UserDefaults.standard.set(userID, forKey: "userID")
         UserDefaults.standard.set(role, forKey: "role")
         UserDefaults.standard.set(isVerified, forKey: "isVerified")
     }

@@ -79,7 +79,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(snapshot?.data()!["name"] as? String, forKey: "name")
                     UserDefaults.standard.set(snapshot?.data()!["email"] as? String, forKey: "email")
                     UserDefaults.standard.set(snapshot?.data()!["schoolID"] as? String, forKey: "schoolID")
-                    UserDefaults.standard.set(snapshot?.data()!["uid"] as? String, forKey: "uid")
+                    UserDefaults.standard.set(snapshot?.data()!["userID"] as? String, forKey: "userID")
                     UserDefaults.standard.set(snapshot?.data()!["isVerified"] as? Int, forKey: "isVerified")
                     UserDefaults.standard.set(snapshot?.data()!["role"] as? Int, forKey: "role")
                     

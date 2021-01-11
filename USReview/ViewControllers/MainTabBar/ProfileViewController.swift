@@ -115,7 +115,7 @@ class ProfileViewController: UIViewController {
                 Utils.setUserDefaults(name: snapshot?.data()!["name"] as! String,
                                       schoolID: snapshot?.data()!["schoolID"] as! String,
                                       email: snapshot?.data()!["email"] as! String,
-                                      uid: snapshot?.data()!["uid"] as! String,
+                                      userID: snapshot?.data()!["userID"] as! String,
                                       role: snapshot?.data()!["role"] as! Int,
                                       isVerified: snapshot?.data()!["isVerified"] as! Int)
                 self.presentData()

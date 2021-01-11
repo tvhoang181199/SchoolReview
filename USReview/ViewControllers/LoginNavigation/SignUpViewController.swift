@@ -116,7 +116,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
                     "password":md5Base64Password,
                     "isVerified": 0,
                     "role": 0,
-                    "uid":result!.user.uid
+                    "userID":result!.user.uid
                 ]) { (error) in
                     if error != nil {
                         self.hud.dismiss()
@@ -129,7 +129,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
                         UserDefaults.standard.set(self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "name")
                         UserDefaults.standard.set(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "email")
                         UserDefaults.standard.set(self.schoolID!, forKey: "schoolID")
-                        UserDefaults.standard.set(result!.user.uid, forKey: "uid")
+                        UserDefaults.standard.set(result!.user.uid, forKey: "userID")
                         UserDefaults.standard.set(0, forKey: "isVerified")
                         UserDefaults.standard.set(0, forKey: "role")
                         
