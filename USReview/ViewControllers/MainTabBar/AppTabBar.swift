@@ -39,7 +39,7 @@ class AppTabBar: UITabBar {
     func createPath() -> CGPath {
         let height: CGFloat = 30
         let path = UIBezierPath()
-            
+
         let centerWidth = self.frame.size.width / 2
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: (centerWidth - height ), y: 0))
@@ -60,6 +60,7 @@ class AppTabBar: UITabBar {
         }
         return nil
     }
+
 }
 
 extension UITabBar {

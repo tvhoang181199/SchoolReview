@@ -69,7 +69,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             
             // Create post in myposts collection
             dispatchGroup.enter()
-            db.collection("myposts").document(postID).setData([postID: titleTextField.text!
+            db.collection("myposts").document(currentUser.string(forKey: "email")!).updateData([postID: titleTextField.text!
             ]) { (error) in
                 if let error = error {
                     self.hud.dismiss()

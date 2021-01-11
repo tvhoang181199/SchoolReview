@@ -20,9 +20,10 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var emailTextField: UILabel!
     @IBOutlet weak var statusTextField: UILabel!
     @IBOutlet weak var verifiedAccountButton: UIButton!
+    @IBOutlet weak var myPostsButtonTopConstraint: NSLayoutConstraint!
     
     var currentUser = UserDefaults.standard
-    var isFetched = false
+    var firestoreListener: ListenerRegistration? = nil
     
     let db = Firestore.firestore()
     
@@ -31,17 +32,21 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        presentData()
+        if (currentUser.integer(forKey: "isVerified") == 2) {
+            presentData()
+        }
+        else {
+            fetchData()
+        }
+        
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if (isFetched) {
-            db.collection("users").document(currentUser.string(forKey: "email")!).getDocument { (snapshot, error) in
-                if (snapshot?.data()!["isVerified"] as? Int != self.currentUser.integer(forKey: "isVerified")) {
-                    self.fetchData()
-                }
-            }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if (firestoreListener != nil && currentUser.integer(forKey: "isVerified") == 2) {
+            firestoreListener?.remove()
+            firestoreListener = nil
+            print("Removed Firestore listener")
         }
     }
     
@@ -64,16 +69,24 @@ class ProfileViewController: UIViewController {
         switch (currentUser.integer(forKey: "isVerified")) {
         case 0:
             statusTextField.text = "Status:   Not Verified"
+            verifiedAccountButton.isHidden = false
             verifiedAccountButton.isEnabled = true
             verifiedAccountButton.alpha = 1
+            myPostsButtonTopConstraint.constant = 8
         case 1:
             statusTextField.text = "Status:   Pending"
+            verifiedAccountButton.isHidden = false
             verifiedAccountButton.isEnabled = false
-            verifiedAccountButton.alpha = 0.5
+            verifiedAccountButton.alpha = 0.6
+            myPostsButtonTopConstraint.constant = 8
         case 2:
             statusTextField.text = "Status:   Verified"
-            verifiedAccountButton.isEnabled = false
-            verifiedAccountButton.alpha = 0.5
+            verifiedAccountButton.isHidden = true
+            myPostsButtonTopConstraint.constant = -50
+            UIView.animate(withDuration: 0.4) { [weak self] in
+                self?.view.layoutIfNeeded()
+            }
+            
         default:
             break
         }
@@ -87,7 +100,7 @@ class ProfileViewController: UIViewController {
                 SCLAlertView().showError("Error", subTitle: error.localizedDescription)
             }
             else {
-                self.fetchData()
+                Toast.show(message: "Your request has been sent", controller: self)
             }
         }
         
@@ -104,14 +117,11 @@ class ProfileViewController: UIViewController {
     
     // MARK: - fetchData
     func fetchData() {
-        hud.show(in: self.view)
-        db.collection("users").document(currentUser.string(forKey: "email")!).getDocument { (snapshot, error) in
-            self.hud.dismiss()
+        firestoreListener = db.collection("users").document(currentUser.string(forKey: "email")!).addSnapshotListener { (snapshot, error) in
             if let error = error {
-                SCLAlertView().showError("Error", subTitle: error.localizedDescription)
+                Toast.show(message: error.localizedDescription, controller: self)
             }
             else {
-                self.isFetched = true
                 Utils.setUserDefaults(name: snapshot?.data()!["name"] as! String,
                                       schoolID: snapshot?.data()!["schoolID"] as! String,
                                       email: snapshot?.data()!["email"] as! String,
