@@ -59,7 +59,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             Toast.show(message: "Please fill Title and Content", controller: self)
         }
         else {
-            hud.textLabel.text = "Posting..."
+            hud.textLabel.text = "Posting"
             hud.show(in: self.view)
             
             // Create an unique id
