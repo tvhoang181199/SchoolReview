@@ -48,7 +48,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             keyboardHeight = keyboardSize.height
         }
     }
-
+    
     @objc func keyboardWillHide(notification: NSNotification) {
     }
     
@@ -64,6 +64,27 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             
             // Create an unique id
             let postID = UUID().uuidString
+            
+            let dispatchGroup = DispatchGroup()
+            
+            // Create post in myposts collection
+            dispatchGroup.enter()
+            db.collection("myposts").document(postID).setData(["postID": postID,
+                                                               "schoolID": currentUser.string(forKey: "schoolID")!,
+                                                               "userID": currentUser.string(forKey: "userID")!,
+                                                               "title": titleTextField.text!,
+                                                               "content": contentTextView.text!,
+                                                               "createdDate": Date()
+            ]) { (error) in
+                if let error = error {
+                    Toast.show(message: error.localizedDescription, controller: self)
+                }
+                else {
+                    dispatchGroup.leave()
+                }
+            }
+            
+            //Create post in posts
             db.collection("posts").document(postID).setData(["postID": postID,
                                                              "schoolID": currentUser.string(forKey: "schoolID")!,
                                                              "userID": currentUser.string(forKey: "userID")!,
@@ -71,16 +92,21 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
                                                              "content": contentTextView.text!,
                                                              "createdDate": Date()
             ]) { (error) in
-                self.hud.dismiss()
                 if let error = error {
                     SCLAlertView().showError("Error", subTitle: error.localizedDescription)
                 }
                 else {
-                    self.presentingViewController?.dismiss(animated: true, completion: {
-                        let vc = UIApplication.getTopMostViewController()!
-                        Toast.show(message: "Your post has been created", controller: vc)
-                    })
+                    dispatchGroup.leave()
                 }
+            }
+            
+            // Dismiss and alert
+            dispatchGroup.notify(queue: .main) {
+                self.hud.dismiss()
+                self.presentingViewController?.dismiss(animated: true, completion: {
+                    let vc = UIApplication.getTopMostViewController()!
+                    Toast.show(message: "Your post has been created", controller: vc)
+                })
             }
         }
     }

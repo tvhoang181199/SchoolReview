@@ -390,8 +390,22 @@
                     <view key="view" contentMode="scaleToFill" id="SdJ-cT-Iq1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="NDq-qE-HaA">
+                                <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="F2n-YI-UXb"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="iOC-ai-R5n"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="NDq-qE-HaA" firstAttribute="trailing" secondItem="iOC-ai-R5n" secondAttribute="trailing" id="Bba-fU-gmK"/>
+                            <constraint firstItem="NDq-qE-HaA" firstAttribute="leading" secondItem="iOC-ai-R5n" secondAttribute="leading" id="FIP-Jc-Pka"/>
+                            <constraint firstItem="NDq-qE-HaA" firstAttribute="top" secondItem="iOC-ai-R5n" secondAttribute="top" id="bb2-b4-Uuh"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Home" image="house" catalog="system" selectedImage="house.fill" id="fDe-HG-mgF">
                         <color key="badgeColor" red="0.1647058824" green="0.1985827386" blue="0.25883167979999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
