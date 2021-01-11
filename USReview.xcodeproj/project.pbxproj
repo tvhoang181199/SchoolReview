@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		179B520425AD0509003F6725 /* MyPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B520325AD0509003F6725 /* MyPostsViewController.swift */; };
 		17ADC79225AB08B900EE003D /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC79125AB08B900EE003D /* MainTabBarController.swift */; };
 		17ADC7B025AB098300EE003D /* AppTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC7AF25AB098300EE003D /* AppTabBar.swift */; };
 		17ADC7B725AB160F00EE003D /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC7B625AB160F00EE003D /* AddPostViewController.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		179B520325AD0509003F6725 /* MyPostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostsViewController.swift; sourceTree = "<group>"; };
 		17ADC79125AB08B900EE003D /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		17ADC7AF25AB098300EE003D /* AppTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabBar.swift; sourceTree = "<group>"; };
 		17ADC7B625AB160F00EE003D /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				17DAD29325A134E5001C6AE0 /* HomeViewController.swift */,
 				17DAD29625A134F8001C6AE0 /* ProfileViewController.swift */,
 				17ADC7B625AB160F00EE003D /* AddPostViewController.swift */,
+				179B520325AD0509003F6725 /* MyPostsViewController.swift */,
 			);
 			path = MainTabBar;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				17DAD29725A134F8001C6AE0 /* ProfileViewController.swift in Sources */,
 				17DAD208259F33D9001C6AE0 /* AppDelegate.swift in Sources */,
 				17ADC7B725AB160F00EE003D /* AddPostViewController.swift in Sources */,
+				179B520425AD0509003F6725 /* MyPostsViewController.swift in Sources */,
 				17DAD26725A0C70C001C6AE0 /* SignUpViewController.swift in Sources */,
 				17DAA94725AC46F600BBF012 /* User.swift in Sources */,
 				17DAD20A259F33D9001C6AE0 /* SceneDelegate.swift in Sources */,
