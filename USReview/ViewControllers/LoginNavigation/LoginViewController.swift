@@ -6,8 +6,11 @@
 //
 
 import UIKit
+
+import FirebaseFirestore
+import FirebaseAuth
+
 import JGProgressHUD
-import Firebase
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
@@ -69,9 +72,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 Toast.show(message: error!.localizedDescription, controller: self)
             }
             else {
-                self.hud.dismiss()
-                let mainTabBarController = UIStoryboard.mainTabBarController()
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
+                self.db.collection("users").document(email).getDocument { (snapshot, error) in
+                    self.hud.dismiss()
+                    
+                    // Set data for after login flow
+                    UserDefaults.standard.set(snapshot?.data()!["name"] as? String, forKey: "name")
+                    UserDefaults.standard.set(snapshot?.data()!["email"] as? String, forKey: "email")
+                    UserDefaults.standard.set(snapshot?.data()!["schoolID"] as? String, forKey: "schoolID")
+                    UserDefaults.standard.set(snapshot?.data()!["uid"] as? String, forKey: "uid")
+                    UserDefaults.standard.set(snapshot?.data()!["isVerified"] as? Int, forKey: "isVerified")
+                    UserDefaults.standard.set(snapshot?.data()!["role"] as? Int, forKey: "role")
+                    
+                    // Change root view to main tab bar
+                    let mainTabBarController = UIStoryboard.mainTabBarController()
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
+                }
             }
         }  
     }

@@ -15,5 +15,4 @@ target 'USReview' do
   
   pod 'SCLAlertView', '~> 0.8'
   pod 'JGProgressHUD'
-  pod 'ObjectMapper'
 end

@@ -6,8 +6,11 @@
 //
 
 import UIKit
+
+import FirebaseFirestore
+import FirebaseAuth
+
 import JGProgressHUD
-import Firebase
 
 import var CommonCrypto.CC_MD5_DIGEST_LENGTH
 import func CommonCrypto.CC_MD5
@@ -24,8 +27,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
     let db = Firestore.firestore()
     
     var schoolID: String? = ""
-    
-    let schoolList = ["Khoa học tự nhiên","Khoa học xã hội và nhân văn", "Kinh tế Luật", "Công nghệ thông tin"]
+
+    let schoolList = ["University of Science",
+                      "University of Social Sciences and Humanities",
+                      "University of Economics and Law",
+                      "University of Information Technology"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,6 +124,16 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
                     }
                     else {
                         self.hud.dismiss()
+                        
+                        // Set data for after login flow
+                        UserDefaults.standard.set(self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "name")
+                        UserDefaults.standard.set(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "email")
+                        UserDefaults.standard.set(self.schoolID!, forKey: "schoolID")
+                        UserDefaults.standard.set(result!.user.uid, forKey: "uid")
+                        UserDefaults.standard.set(0, forKey: "isVerified")
+                        UserDefaults.standard.set(0, forKey: "role")
+                        
+                        // Change root view to main tab bar
                         let mainTabBarController = UIStoryboard.mainTabBarController()
                         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
                     }
@@ -149,7 +165,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
             picker.delegate = self
             textField.inputView = picker
             picker.selectRow(0, inComponent: 0, animated: true)
-            schoolID = "S001"
+            schoolID = "S000"
             textField.text = schoolList[0]
         }
     }
