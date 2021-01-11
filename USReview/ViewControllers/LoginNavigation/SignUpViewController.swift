@@ -105,10 +105,24 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
         
         Auth.auth().createUser(withEmail: emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), password: passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)) { (result, err) in
             if err != nil {
-                Toast.show(message: "Error creating user!", controller: self)
                 self.hud.dismiss()
+                Toast.show(message: "Error creating user!", controller: self)
             }
             else {
+                let dispatchGroup = DispatchGroup()
+                
+                // Set data to mypost collection
+                dispatchGroup.enter()
+                self.db.collection("myposts").document(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)).setData([:]) { (error) in
+                    if error != nil {
+                        self.hud.dismiss()
+                        Toast.show(message: "Error saving user!", controller: self)
+                    }
+                    dispatchGroup.leave()
+                }
+                
+                // Set data to users collection
+                dispatchGroup.enter()
                 self.db.collection("users").document(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)).setData([
                     "name":self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines),
                     "schoolID":self.schoolID!,
@@ -122,21 +136,24 @@ class SignUpViewController: UIViewController, UITextFieldDelegate,  UIPickerView
                         self.hud.dismiss()
                         Toast.show(message: "Error saving user!", controller: self)
                     }
-                    else {
-                        self.hud.dismiss()
-                        
-                        // Set data for after login flow
-                        UserDefaults.standard.set(self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "name")
-                        UserDefaults.standard.set(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "email")
-                        UserDefaults.standard.set(self.schoolID!, forKey: "schoolID")
-                        UserDefaults.standard.set(result!.user.uid, forKey: "userID")
-                        UserDefaults.standard.set(0, forKey: "isVerified")
-                        UserDefaults.standard.set(0, forKey: "role")
-                        
-                        // Change root view to main tab bar
-                        let mainTabBarController = UIStoryboard.mainTabBarController()
-                        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
-                    }
+                    dispatchGroup.leave()
+                }
+                
+                // Change to main tab bar and alert
+                dispatchGroup.notify(queue: .main) {
+                    self.hud.dismiss()
+                    
+                    // Set data for after login flow
+                    UserDefaults.standard.set(self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "name")
+                    UserDefaults.standard.set(self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "email")
+                    UserDefaults.standard.set(self.schoolID!, forKey: "schoolID")
+                    UserDefaults.standard.set(result!.user.uid, forKey: "userID")
+                    UserDefaults.standard.set(0, forKey: "isVerified")
+                    UserDefaults.standard.set(0, forKey: "role")
+                    
+                    // Change root view to main tab bar
+                    let mainTabBarController = UIStoryboard.mainTabBarController()
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
                 }
             }
         }

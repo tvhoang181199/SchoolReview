@@ -69,12 +69,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             
             // Create post in myposts collection
             dispatchGroup.enter()
-            db.collection("myposts").document(postID).setData(["postID": postID,
-                                                               "schoolID": currentUser.string(forKey: "schoolID")!,
-                                                               "userID": currentUser.string(forKey: "userID")!,
-                                                               "title": titleTextField.text!,
-                                                               "content": contentTextView.text!,
-                                                               "createdDate": Date()
+            db.collection("myposts").document(currentUser.string(forKey: "email")!).updateData([postID: titleTextField.text!
             ]) { (error) in
                 if let error = error {
                     Toast.show(message: error.localizedDescription, controller: self)
@@ -83,6 +78,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             }
             
             //Create post in posts
+            dispatchGroup.enter()
             db.collection("posts").document(postID).setData(["postID": postID,
                                                              "schoolID": currentUser.string(forKey: "schoolID")!,
                                                              "userID": currentUser.string(forKey: "userID")!,

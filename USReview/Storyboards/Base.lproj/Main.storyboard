@@ -603,7 +603,7 @@
         <scene sceneID="Pmk-zk-GS9">
             <objects>
                 <tabBarController storyboardIdentifier="MainTabBarController" id="9Ow-8g-6pN" customClass="MainTabBarController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="k0S-Dk-Tup" customClass="AppTabBar" customModule="USReview" customModuleProvider="target">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="k0S-Dk-Tup">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -638,11 +638,6 @@
             <point key="canvasLocation" x="-1.4492753623188408" y="64.955357142857139"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="k0S-Dk-Tup">
-            <size key="intrinsicContentSize" width="-1" height="83"/>
-        </designable>
-    </designables>
     <color key="tintColor" red="0.1647058824" green="0.1985827386" blue="0.25883167979999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
         <image name="house" catalog="system" width="128" height="106"/>

@@ -18,9 +18,10 @@ class MainTabBarController: UITabBarController {
     }
 
     func setupMiddleButton() {
+        let tabBarHeight = self.tabBar.frame.height
         let addButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         var addButtonFrame = addButton.frame
-        addButtonFrame.origin.y = view.bounds.height - 49 - addButtonFrame.size.height/2
+        addButtonFrame.origin.y = view.bounds.height - tabBarHeight - addButtonFrame.size.height/2
         addButtonFrame.origin.x = view.bounds.width/2 - addButtonFrame.size.width/2
         addButton.frame = addButtonFrame
 

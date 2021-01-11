@@ -29,7 +29,8 @@ class AppTabBar: UITabBar {
 
         if let oldShapeLayer = self.shapeLayer {
             self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
-        } else {
+        }
+        else {
             self.layer.insertSublayer(shapeLayer, at: 0)
         }
         self.shapeLayer = shapeLayer
@@ -39,7 +40,7 @@ class AppTabBar: UITabBar {
         let height: CGFloat = 30
         let path = UIBezierPath()
             
-        let centerWidth = self.frame.width / 2
+        let centerWidth = self.frame.size.width / 2
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: (centerWidth - height ), y: 0))
         path.addArc(withCenter: CGPoint(x: centerWidth, y: 0), radius: 30, startAngle: CGFloat(Double.pi), endAngle: 0, clockwise: false)
@@ -61,10 +62,10 @@ class AppTabBar: UITabBar {
     }
 }
 
-extension UITabBar {
-    override open func sizeThatFits(_ size: CGSize) -> CGSize {
-        var sizeThatFits = super.sizeThatFits(size)
-        sizeThatFits.height = 49
-        return sizeThatFits
-    }
-}
+//extension UITabBar {
+//    override open func sizeThatFits(_ size: CGSize) -> CGSize {
+//        var sizeThatFits = super.sizeThatFits(size)
+//        sizeThatFits.height = 49
+//        return sizeThatFits
+//    }
+//}
