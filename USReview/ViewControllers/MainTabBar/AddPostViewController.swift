@@ -87,6 +87,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
                                                              "title": titleTextField.text!,
                                                              "content": contentTextView.text!,
                                                              "like": 0,
+                                                             "isVerified": false,
                                                              "createdDate": Date()
             ]) { (error) in
                 if let error = error {

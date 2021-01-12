@@ -14,6 +14,7 @@ class Post {
     var title: String? = ""
     var content: String? = ""
     var like: Int? = 0
+    var isVerified: Bool? = false
     var createdDate: Date? = nil
     
     init(){
