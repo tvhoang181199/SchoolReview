@@ -52,6 +52,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
     @objc func keyboardWillHide(notification: NSNotification) {
     }
     
+    // MARK: - UIButton actions
     @IBAction func postButtonTapped(_ sender: Any) {
         if (titleTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
                 (contentTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "Content" &&
@@ -85,6 +86,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
                                                              "userID": currentUser.string(forKey: "userID")!,
                                                              "title": titleTextField.text!,
                                                              "content": contentTextView.text!,
+                                                             "like": 0,
                                                              "createdDate": Date()
             ]) { (error) in
                 if let error = error {
@@ -108,6 +110,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
     @IBAction func closeButtonTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
+    
     // MARK: - textView Protocols
     func textViewDidBeginEditing(_ textView: UITextView) {
         if (textView.textColor == UIColor.systemGray4) {

@@ -339,6 +339,9 @@
                                                 <integer key="value" value="3"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="myPostsButtonTapped:" destination="LGq-a4-dcb" eventType="touchUpInside" id="ngJ-8Z-Lff"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -392,6 +395,7 @@
                     </tabBarItem>
                     <connections>
                         <outlet property="emailTextField" destination="rxs-Yg-y2I" id="LBj-DB-SV8"/>
+                        <outlet property="myPostsButton" destination="27I-Nk-oID" id="XwV-al-6Gc"/>
                         <outlet property="myPostsButtonTopConstraint" destination="cj0-sA-vR5" id="15H-qP-RPO"/>
                         <outlet property="nameTextField" destination="kiS-GU-20A" id="amq-df-MOz"/>
                         <outlet property="schoolTextField" destination="GpQ-ad-bls" id="pzG-Wn-LhY"/>
@@ -411,7 +415,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="NDq-qE-HaA">
+                            <searchBar contentMode="redraw" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NDq-qE-HaA">
                                 <rect key="frame" x="0.0" y="44" width="414" height="56"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="56" id="F2n-YI-UXb"/>
@@ -618,6 +622,55 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zAz-U2-j3x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3883" y="65"/>
+        </scene>
+        <!--My Posts View Controller-->
+        <scene sceneID="jj6-1m-MxP">
+            <objects>
+                <viewController storyboardIdentifier="MyPostsViewController" id="f1Y-ku-L9T" customClass="MyPostsViewController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Wfa-mN-eV1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ehf-L4-5Ir" userLabel="Close Button">
+                                <rect key="frame" x="15" y="59" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="4a9-eS-zzn"/>
+                                    <constraint firstAttribute="height" constant="20" id="QVT-Pd-Qwm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="tintColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="large"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="15" scale="large" weight="bold"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeButtonTapped:" destination="f1Y-ku-L9T" eventType="touchUpInside" id="5Rs-H1-b3K"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MY POSTS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYS-io-Zfy">
+                                <rect key="frame" x="50" y="44" width="319" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="AsE-6V-YN7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="GillSans-Bold" family="Gill Sans" pointSize="20"/>
+                                <color key="textColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="tOJ-Uc-nDa"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="tOJ-Uc-nDa" firstAttribute="trailing" secondItem="yYS-io-Zfy" secondAttribute="trailing" constant="45" id="YJz-nE-XCQ"/>
+                            <constraint firstItem="yYS-io-Zfy" firstAttribute="top" secondItem="tOJ-Uc-nDa" secondAttribute="top" id="avz-Ly-cDJ"/>
+                            <constraint firstItem="ehf-L4-5Ir" firstAttribute="top" secondItem="tOJ-Uc-nDa" secondAttribute="top" constant="15" id="bAo-Zj-Lzv"/>
+                            <constraint firstItem="ehf-L4-5Ir" firstAttribute="leading" secondItem="tOJ-Uc-nDa" secondAttribute="leading" constant="15" id="eh0-fU-hrY"/>
+                            <constraint firstItem="yYS-io-Zfy" firstAttribute="leading" secondItem="ehf-L4-5Ir" secondAttribute="trailing" constant="15" id="lDK-Hn-2Si"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8f4-Ij-GHg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4836" y="799"/>
         </scene>
         <!--Main Tab Bar Controller-->
         <scene sceneID="Pmk-zk-GS9">

@@ -20,6 +20,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var emailTextField: UILabel!
     @IBOutlet weak var statusTextField: UILabel!
     @IBOutlet weak var verifiedAccountButton: UIButton!
+    @IBOutlet weak var myPostsButton: UIButton!
     @IBOutlet weak var myPostsButtonTopConstraint: NSLayoutConstraint!
     
     var currentUser = UserDefaults.standard
@@ -31,6 +32,8 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        _setupUI()
         
         if (currentUser.integer(forKey: "isVerified") == 2) {
             presentData()
@@ -48,6 +51,14 @@ class ProfileViewController: UIViewController {
             firestoreListener = nil
             print("Removed Firestore listener")
         }
+    }
+    
+    func _setupUI() {
+        verifiedAccountButton.alpha = 1
+        verifiedAccountButton.isEnabled = false
+        myPostsButton.alpha = 0
+        myPostsButton.isEnabled = false
+        myPostsButtonTopConstraint.constant = -50
     }
     
     func presentData() {
@@ -72,26 +83,48 @@ class ProfileViewController: UIViewController {
             verifiedAccountButton.isHidden = false
             verifiedAccountButton.isEnabled = true
             verifiedAccountButton.alpha = 1
-            myPostsButtonTopConstraint.constant = 8
+            myPostsButton.isHidden = true
+            myPostsButton.isEnabled = false
+            myPostsButton.alpha = 0
+            
         case 1:
             statusTextField.text = "Status:   Pending"
             verifiedAccountButton.isHidden = false
             verifiedAccountButton.isEnabled = false
-            verifiedAccountButton.alpha = 0.6
-            myPostsButtonTopConstraint.constant = 8
+            verifiedAccountButton.alpha = 0.8
+            myPostsButton.isHidden = true
+            myPostsButton.isEnabled = false
+            myPostsButton.alpha = 0
         case 2:
             statusTextField.text = "Status:   Verified"
-            verifiedAccountButton.isHidden = true
-            myPostsButtonTopConstraint.constant = -50
-            UIView.animate(withDuration: 0.4) { [weak self] in
-                self?.view.layoutIfNeeded()
+            verifiedAccountButton.isEnabled = false
+            myPostsButton.isHidden = false
+            myPostsButton.isEnabled = true
+            if (firestoreListener != nil) {
+                UIView.animate(withDuration: 0.24,
+                               delay: 0,
+                               options: .curveEaseOut) { [weak self] in
+                    self?.verifiedAccountButton.alpha = 0
+                } completion: { (value) in
+                    UIView.animate(withDuration: 0.4,
+                                   delay: 0,
+                                   options: .curveEaseOut) { [weak self] in
+                        self?.myPostsButton.alpha = 1
+                    } completion: { (value) in
+                    }
+                }
             }
-            
+            else {
+                verifiedAccountButton.alpha = 0
+                myPostsButton.alpha = 1
+            }
+
         default:
             break
         }
     }
     
+    // MARK: - UIButton actions
     @IBAction func verifiedAccountButtonTapped(_ sender: Any) {
         hud.show(in: self.view)
         db.collection("users").document(currentUser.string(forKey: "email")!).updateData(["isVerified":1]) { (error) in
@@ -104,6 +137,12 @@ class ProfileViewController: UIViewController {
             }
         }
         
+    }
+    
+    @IBAction func myPostsButtonTapped(_ sender: Any) {
+        let vc = UIStoryboard.myPostsViewController()
+        vc!.modalPresentationStyle = .fullScreen
+        self.present(vc!, animated: true, completion: nil)
     }
     
     @IBAction func logoutButtonTapped(_ sender: Any) {

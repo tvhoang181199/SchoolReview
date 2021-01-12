@@ -14,14 +14,6 @@ extension UIStoryboard {
         return UIStoryboard(name: "Main", bundle: Bundle.main)
     }
     
-    class func loginViewController() -> LoginViewController? {
-        return mainStoryboard().instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController
-    }
-    
-    class func signUpViewController() -> SignUpViewController? {
-        return mainStoryboard().instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController
-    }
-    
     class func mainTabBarController() -> MainTabBarController? {
         return mainStoryboard().instantiateViewController(withIdentifier: "MainTabBarController") as? MainTabBarController
     }
@@ -30,8 +22,20 @@ extension UIStoryboard {
         return mainStoryboard().instantiateViewController(withIdentifier: "LoginNavigationController")
     }
     
+    class func loginViewController() -> LoginViewController? {
+        return mainStoryboard().instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController
+    }
+    
+    class func signUpViewController() -> SignUpViewController? {
+        return mainStoryboard().instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController
+    }
+    
     class func addPostViewController() -> AddPostViewController? {
         return mainStoryboard().instantiateViewController(withIdentifier: "AddPostViewController") as? AddPostViewController
+    }
+    
+    class func myPostsViewController() -> MyPostsViewController? {
+        return mainStoryboard().instantiateViewController(withIdentifier: "MyPostsViewController") as? MyPostsViewController
     }
     
 }
