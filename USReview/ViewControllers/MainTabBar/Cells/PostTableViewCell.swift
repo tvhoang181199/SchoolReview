@@ -7,8 +7,11 @@
 
 import UIKit
 
-protocol EditPostProtocol {
+import FirebaseFirestore
+
+protocol PostCellProtocol {
     func editPostDidTapped(_ data: Post)
+    func callBackError(_ error: Error)
 }
 
 class PostTableViewCell: UITableViewCell {
@@ -23,11 +26,16 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var likesCountLabel: UILabel!
     @IBOutlet weak var commentsStackView: UIStackView!
-    @IBOutlet weak var starBottomSplitLine: UIView!
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var commentTextField: UITextField!
+    @IBOutlet weak var commentButton: UIButton!
     
-    var delegate: EditPostProtocol!
+    var delegate: PostCellProtocol!
     var postData: Post? = nil
+    
+    // Quick access properties
+    let db = Firestore.firestore()
+    let currentUser = UserDefaults.standard
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -90,11 +98,43 @@ class PostTableViewCell: UITableViewCell {
             statusLabel.text = "Pending"
         }
         
-        starBottomSplitLine.isHidden = true
+        // Like status
+        if (post.isCurrentUserLikedPost()) {
+            likeButton.isSelected = true
+        }
+        else {
+            likeButton.isSelected = false
+        }
         
     }
 
     @IBAction func starButtonTapped(_ sender: Any) {
+        if (likeButton.isSelected == false) {
+            db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":[
+                                                                                currentUser.string(forKey: "userID"):true],
+                                                                             "likes": ((postData?.likes)!+1)
+            ]) { (error) in
+                if let error = error {
+                    self.delegate.callBackError(error)
+                }
+                else {
+                    self.likeButton.isSelected = true
+                }
+            }
+        }
+        else if (likeButton.isSelected == true) {
+            db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":[
+                                                                                currentUser.string(forKey: "userID"):false],
+                                                                             "likes": ((postData?.likes)!-1)
+            ]) { (error) in
+                if let error = error {
+                    self.delegate.callBackError(error)
+                }
+                else {
+                    self.likeButton.isSelected = false
+                }
+            }
+        }
     }
     
     @IBAction func editButtonTapped(_ sender: Any) {

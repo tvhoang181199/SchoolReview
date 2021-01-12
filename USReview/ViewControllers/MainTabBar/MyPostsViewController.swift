@@ -12,7 +12,7 @@ import FirebaseFirestore
 import JGProgressHUD
 import SCLAlertView
 
-class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EditPostProtocol {
+class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PostCellProtocol {
 
     @IBOutlet weak var myPostsTableView: UITableView!
     
@@ -108,13 +108,17 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    // MARK: - Edit Post Protocols
+    // MARK: - Post Cell Protocol
     func editPostDidTapped(_ data: Post) {
         let vc = UIStoryboard.addPostViewController()
         vc?.postData = data
         vc?.titleString = "EDIT POST"
         vc!.modalPresentationStyle = .fullScreen
         self.present(vc!, animated: true, completion: nil)
+    }
+    
+    func callBackError(_ error: Error) {
+        Toast.show(message: error.localizedDescription, controller: self)
     }
     
 }

@@ -12,7 +12,7 @@ import FirebaseFirestore
 import SCLAlertView
 import JGProgressHUD
 
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PostCellProtocol {
 
     @IBOutlet weak var postsTableView: UITableView!
     
@@ -34,7 +34,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         postsTableView.contentInset = UIEdgeInsets(top:15, left: 0, bottom: 15, right: 0)
         postsTableView.reloadData()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         fetchData()
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height - 70
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     func presentData() {
@@ -65,6 +82,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as! PostTableViewCell
         
+        cell.delegate = self
         cell.selectionStyle = UITableViewCell.SelectionStyle.none
         cell.setPost(postsList[indexPath.row])
         cell.editButton.isHidden = true
@@ -94,5 +112,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
 
+    // MARK: - Post Cell Protocol
+    func callBackError(_ error: Error) {
+        Toast.show(message: error.localizedDescription, controller: self)
+    }
+    
+    func editPostDidTapped(_ data: Post) {
+        // nothing here
+    }
 
 }
