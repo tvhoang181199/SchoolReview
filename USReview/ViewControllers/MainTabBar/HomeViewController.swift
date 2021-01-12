@@ -16,12 +16,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var postsTableView: UITableView!
     
-    // quick access properties
+    // Quick access properties
     let currentUser = UserDefaults.standard
     let db = Firestore.firestore()
     let hud = JGProgressHUD(style: .dark)
     
-    // data properties
+    // Data properties
     var postsList = [Post]()
     
     override func viewDidLoad() {
@@ -29,6 +29,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         postsTableView.delegate = self
         postsTableView.dataSource = self
+        postsTableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: "PostTableViewCell")
         
         postsTableView.contentInset = UIEdgeInsets(top:15, left: 0, bottom: 15, right: 0)
         postsTableView.reloadData()
@@ -64,7 +65,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as! PostTableViewCell
         
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
         cell.setPost(postsList[indexPath.row])
+        cell.editButton.isHidden = true
         
         return cell
     }
@@ -72,7 +75,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - fetchData
     func fetchData() {
         hud.show(in: self.view)
-        db.collection("posts").addSnapshotListener() { (snapshot, error) in
+        db.collection("posts").order(by: "createdDate", descending: true).addSnapshotListener() { (snapshot, error) in
             if let error = error {
                 self.hud.dismiss()
                 Toast.show(message: error.localizedDescription, controller: self)
@@ -81,7 +84,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.postsList.removeAll()
                 for document in snapshot!.documents {
                     let post = Post(document as DocumentSnapshot)
-                    if (post.isVerified!) {
+                    if (post.isVerified! == true) {
                         self.postsList.append(post)
                     }
                     self.presentData()

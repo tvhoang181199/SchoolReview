@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17983C7E25AE143800E73374 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17983C7C25AE143800E73374 /* PostTableViewCell.xib */; };
 		179B520425AD0509003F6725 /* MyPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B520325AD0509003F6725 /* MyPostsViewController.swift */; };
 		17ADC79225AB08B900EE003D /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC79125AB08B900EE003D /* MainTabBarController.swift */; };
 		17ADC7B025AB098300EE003D /* AppTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC7AF25AB098300EE003D /* AppTabBar.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17983C7C25AE143800E73374 /* PostTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
 		179B520325AD0509003F6725 /* MyPostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostsViewController.swift; sourceTree = "<group>"; };
 		17ADC79125AB08B900EE003D /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		17ADC7AF25AB098300EE003D /* AppTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabBar.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				17B55E0C25AD9083008FD4FE /* PostTableViewCell.swift */,
+				17983C7C25AE143800E73374 /* PostTableViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				17DAD214259F33E3001C6AE0 /* LaunchScreen.storyboard in Resources */,
+				17983C7E25AE143800E73374 /* PostTableViewCell.xib in Resources */,
 				17DAD21D259F34AB001C6AE0 /* GoogleService-Info.plist in Resources */,
 				17DAD211259F33E3001C6AE0 /* Assets.xcassets in Resources */,
 				17DAD20F259F33D9001C6AE0 /* Main.storyboard in Resources */,

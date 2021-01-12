@@ -15,10 +15,11 @@ import JGProgressHUD
 
 class ProfileViewController: UIViewController {
     
-    @IBOutlet weak var nameTextField: UILabel!
-    @IBOutlet weak var schoolTextField: UILabel!
-    @IBOutlet weak var emailTextField: UILabel!
-    @IBOutlet weak var statusTextField: UILabel!
+    @IBOutlet weak var userImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var schoolLabel: UILabel!
+    @IBOutlet weak var emailLabel: UILabel!
+    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var verifiedAccountButton: UIButton!
     @IBOutlet weak var myPostsButton: UIButton!
     @IBOutlet weak var myPostsButtonTopConstraint: NSLayoutConstraint!
@@ -62,24 +63,41 @@ class ProfileViewController: UIViewController {
     }
     
     func presentData() {
-        // Update data to textfields
-        nameTextField.text = currentUser.string(forKey: "name")
+        // Simple components
+        nameLabel.text = currentUser.string(forKey: "name")
+        emailLabel.text = "Email:    \(currentUser.string(forKey: "email")!)"
+        
+        // Hard code school name with schoolID
         switch (currentUser.string(forKey: "schoolID")!) {
         case "S000":
-            schoolTextField.text = "University of Science"
+            schoolLabel.text = "University of Science"
         case "S001":
-            schoolTextField.text = "University of Social Sciences and Humanities"
+            schoolLabel.text = "University of Social Sciences and Humanities"
         case "S002":
-            schoolTextField.text = "University of Economics and Law"
+            schoolLabel.text = "University of Economics and Law"
         case "S003":
-            schoolTextField.text = "University of Information Technology"
+            schoolLabel.text = "University of Information Technology"
         default:
             break
         }
-        emailTextField.text = "Email:    \(currentUser.string(forKey: "email")!)"
+        
+        // Hard code user avatar with schoolID
+        switch (currentUser.string(forKey: "schoolID")!) {
+        case "S000":
+            userImageView.image = UIImage(named: "HCMUS_avatar")
+        case "S001":
+            userImageView.image = UIImage(named: "HCMUSSH_avatar")
+        case "S002":
+            userImageView.image = UIImage(named: "UEL_avatar")
+        case "S003":
+            userImageView.image = UIImage(named: "UIT_avatar")
+        default:
+            break
+        }
+        
         switch (currentUser.integer(forKey: "isVerified")) {
         case 0:
-            statusTextField.text = "Status:   Not Verified"
+            statusLabel.text = "Status:   Not Verified"
             verifiedAccountButton.isHidden = false
             verifiedAccountButton.isEnabled = true
             verifiedAccountButton.alpha = 1
@@ -88,7 +106,7 @@ class ProfileViewController: UIViewController {
             myPostsButton.alpha = 0
             
         case 1:
-            statusTextField.text = "Status:   Pending"
+            statusLabel.text = "Status:   Pending"
             verifiedAccountButton.isHidden = false
             verifiedAccountButton.isEnabled = false
             verifiedAccountButton.alpha = 0.8
@@ -96,7 +114,7 @@ class ProfileViewController: UIViewController {
             myPostsButton.isEnabled = false
             myPostsButton.alpha = 0
         case 2:
-            statusTextField.text = "Status:   Verified"
+            statusLabel.text = "Status:   Verified"
             verifiedAccountButton.isEnabled = false
             myPostsButton.isHidden = false
             myPostsButton.isEnabled = true

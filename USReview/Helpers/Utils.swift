@@ -22,4 +22,23 @@ class Utils: NSObject {
         UserDefaults.standard.set(role, forKey: "role")
         UserDefaults.standard.set(isVerified, forKey: "isVerified")
     }
+    
+    static func suffixNumber(number: Int) -> String {
+        var num: Double = Double(number)
+        let sign = ((num < 0) ? "-" : "" )
+
+        num = fabs(num)
+
+        if (num < 1000.0){
+            return String(format: "%@%.0f", sign, num)
+        }
+
+        let exp: Int = Int(log10(num) / 3.0 )
+
+        let units: [String] = ["K","M","B"]
+
+        let roundedNum: Double = round(10 * num / pow(1000.0,Double(exp))) / 10
+
+        return "\(sign)\(roundedNum)\(units[exp-1])"
+    }
 }
