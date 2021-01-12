@@ -11,6 +11,7 @@
 		17ADC79225AB08B900EE003D /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC79125AB08B900EE003D /* MainTabBarController.swift */; };
 		17ADC7B025AB098300EE003D /* AppTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC7AF25AB098300EE003D /* AppTabBar.swift */; };
 		17ADC7B725AB160F00EE003D /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC7B625AB160F00EE003D /* AddPostViewController.swift */; };
+		17B55E0D25AD9083008FD4FE /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B55E0C25AD9083008FD4FE /* PostTableViewCell.swift */; };
 		17DAA94725AC46F600BBF012 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DAA94625AC46F600BBF012 /* User.swift */; };
 		17DAA94A25AC6F3800BBF012 /* School.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DAA94925AC6F3700BBF012 /* School.swift */; };
 		17DAA94D25AC6F4400BBF012 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DAA94C25AC6F4400BBF012 /* Post.swift */; };
@@ -36,6 +37,7 @@
 		17ADC79125AB08B900EE003D /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		17ADC7AF25AB098300EE003D /* AppTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabBar.swift; sourceTree = "<group>"; };
 		17ADC7B625AB160F00EE003D /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
+		17B55E0C25AD9083008FD4FE /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		17DAA94625AC46F600BBF012 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		17DAA94925AC6F3700BBF012 /* School.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = School.swift; sourceTree = "<group>"; };
 		17DAA94C25AC6F4400BBF012 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -72,6 +74,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		17B55E0B25AD9049008FD4FE /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				17B55E0C25AD9083008FD4FE /* PostTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		17DAD1FB259F33D9001C6AE0 = {
 			isa = PBXGroup;
 			children = (
@@ -157,6 +167,7 @@
 		17DAD2A025A14007001C6AE0 /* MainTabBar */ = {
 			isa = PBXGroup;
 			children = (
+				17B55E0B25AD9049008FD4FE /* Cells */,
 				17ADC7AF25AB098300EE003D /* AppTabBar.swift */,
 				17ADC79125AB08B900EE003D /* MainTabBarController.swift */,
 				17DAD29325A134E5001C6AE0 /* HomeViewController.swift */,
@@ -316,6 +327,7 @@
 				17DAD27725A1296E001C6AE0 /* Toast.swift in Sources */,
 				17DAA94A25AC6F3800BBF012 /* School.swift in Sources */,
 				17DAD27A25A12984001C6AE0 /* Utils.swift in Sources */,
+				17B55E0D25AD9083008FD4FE /* PostTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

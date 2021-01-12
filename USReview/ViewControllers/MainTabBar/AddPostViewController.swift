@@ -84,6 +84,7 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             db.collection("posts").document(postID).setData(["postID": postID,
                                                              "schoolID": currentUser.string(forKey: "schoolID")!,
                                                              "userID": currentUser.string(forKey: "userID")!,
+                                                             "userName": currentUser.string(forKey: "name")!,
                                                              "title": titleTextField.text!,
                                                              "content": contentTextView.text!,
                                                              "like": 0,
