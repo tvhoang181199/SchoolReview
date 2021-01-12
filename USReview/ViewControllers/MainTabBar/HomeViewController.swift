@@ -72,14 +72,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - fetchData
     func fetchData() {
         hud.show(in: self.view)
-        db.collection("posts").whereField("isVerified", isEqualTo: true).getDocuments() { (querySnapshot, error) in
+        db.collection("posts").addSnapshotListener() { (snapshot, error) in
             if let error = error {
                 self.hud.dismiss()
                 Toast.show(message: error.localizedDescription, controller: self)
             }
             else {
-                for document in querySnapshot!.documents {
-                    self.postsList.append(Post(document as DocumentSnapshot))
+                self.postsList.removeAll()
+                for document in snapshot!.documents {
+                    let post = Post(document as DocumentSnapshot)
+                    if (post.isVerified!) {
+                        self.postsList.append(post)
+                    }
                     self.presentData()
                 }
                 self.hud.dismiss()

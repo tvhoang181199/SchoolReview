@@ -18,9 +18,9 @@ class Post {
     var content: String? = ""
     var like: Int? = 0
     var isVerified: Bool? = false
-    var createdDate: Date? = nil
+    var createdDate: Timestamp? = nil
     
-    init(postID: String?, schoolID: String?, userID: String?, userName: String?, title: String?, content: String?, like: Int?, isVerified: Bool?, createdDate: Date?) {
+    init(postID: String?, schoolID: String?, userID: String?, userName: String?, title: String?, content: String?, like: Int?, isVerified: Bool?, createdDate: Timestamp?) {
         self.postID = postID
         self.schoolID = schoolID
         self.userID = schoolID
@@ -53,10 +53,10 @@ class Post {
         self.content = snapshotData.data()!["content"] as? String
         self.like = snapshotData.data()!["like"] as? Int
         self.isVerified = snapshotData.data()!["isVerified"] as? Bool
-        self.createdDate = snapshotData.data()!["createdDate"] as? Date
+        self.createdDate = snapshotData.data()!["createdDate"] as? Timestamp
     }
     
-    func setPost(postID: String?, schoolID: String?, userID: String?, userName: String?, title: String?, content: String?, like: Int?, isVerified: Bool?, createdDate: Date?) {
+    func setPost(postID: String?, schoolID: String?, userID: String?, userName: String?, title: String?, content: String?, like: Int?, isVerified: Bool?, createdDate: Timestamp?) {
         self.postID = postID
         self.schoolID = schoolID
         self.userID = schoolID
@@ -89,6 +89,6 @@ class Post {
         self.content = snapshotData.data()!["content"] as? String
         self.like = snapshotData.data()!["like"] as? Int
         self.isVerified = snapshotData.data()!["isVerified"] as? Bool
-        self.createdDate = snapshotData.data()!["createdDate"] as? Date
+        self.createdDate = snapshotData.data()!["createdDate"] as? Timestamp
     }
 }

@@ -11,6 +11,7 @@ class PostTableViewCell: UITableViewCell {
 
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var userNameLabel: UILabel!
+    @IBOutlet weak var createdDateLabel: UILabel!
     @IBOutlet weak var postTitleLabel: UILabel!
     @IBOutlet weak var postContentLabel: UILabel!
     @IBOutlet weak var schoolImageView: UIImageView!
@@ -41,6 +42,11 @@ class PostTableViewCell: UITableViewCell {
         default:
             break
         }
+        
+        // formatter for createdDate
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm E, dd/MM/yyyy"
+        createdDateLabel.text = formatter.string(from: post.createdDate!.dateValue())
     }
 
 }
