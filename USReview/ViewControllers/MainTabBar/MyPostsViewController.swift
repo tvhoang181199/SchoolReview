@@ -16,6 +16,7 @@ import SCLAlertView
 class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PostCellProtocol, CheckUserBlockedProtocol {
 
     @IBOutlet weak var myPostsTableView: UITableView!
+    @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     
     // quick access properties
     let currentUser = UserDefaults.standard
@@ -35,10 +36,24 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         myPostsTableView.dataSource = self
         myPostsTableView.register(UINib(nibName: "PostTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "PostTableViewCell")
         
-        myPostsTableView.contentInset = UIEdgeInsets(top:15, left: 0, bottom: 15, right: 0)
+        myPostsTableView.contentInset = UIEdgeInsets(top:10, left: 0, bottom: 15, right: 0)
         myPostsTableView.reloadData()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         fetchData()
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardSize.height
+            containerBottomConstraint.constant = keyboardHeight
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        containerBottomConstraint.constant = 0
     }
     
     func presentData() {

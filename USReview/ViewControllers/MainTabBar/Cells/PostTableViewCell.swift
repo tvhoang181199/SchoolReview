@@ -157,7 +157,6 @@ class PostTableViewCell: UITableViewCell {
             commentUserNameLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
             commentUserNameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
             commentUserNameLabel.topAnchor.constraint(equalTo: commentImageView.topAnchor, constant: 3).isActive = true
-//            commentUserNameLabel.heightAnchor.constraint(equalToConstant: 14).isActive = true
             
             commentContentLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
             commentContentLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
@@ -252,5 +251,4 @@ class PostTableViewCell: UITableViewCell {
         commentTextField.text = ""
         commentTextField.resignFirstResponder()
     }
-    
 }

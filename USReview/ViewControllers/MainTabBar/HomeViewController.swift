@@ -12,9 +12,11 @@ import FirebaseFirestore
 import SCLAlertView
 import JGProgressHUD
 
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PostCellProtocol {
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, PostCellProtocol {
 
     @IBOutlet weak var postsTableView: UITableView!
+    @IBOutlet weak var postsSearchBar: UISearchBar!
+    @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     
     // Quick access properties
     let currentUser = UserDefaults.standard
@@ -24,14 +26,22 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // Data properties
     var postsList = [Post]()
     
+    // Listener
+    var firestoreListener: ListenerRegistration? = nil
+    
+    var searchQueue = OperationQueue()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup searchbar
+        postsSearchBar.delegate = self
+        
+        // Setup tableview
         postsTableView.delegate = self
         postsTableView.dataSource = self
         postsTableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: "PostTableViewCell")
-        
-        postsTableView.contentInset = UIEdgeInsets(top:15, left: 0, bottom: 15, right: 0)
+        postsTableView.contentInset = UIEdgeInsets(top:10, left: 0, bottom: 15, right: 0)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -41,16 +51,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height - 70
-            }
+            let keyboardHeight = keyboardSize.height
+            containerBottomConstraint.constant = keyboardHeight - 49
         }
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
+        containerBottomConstraint.constant = 0
     }
     
     func presentData() {
@@ -93,7 +100,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - fetchData
     func fetchData() {
         hud.show(in: self.view)
-        db.collection("posts").order(by: "createdDate", descending: true).addSnapshotListener() { (snapshot, error) in
+        firestoreListener = db.collection("posts").order(by: "createdDate", descending: true).addSnapshotListener() { (snapshot, error) in
             if let error = error {
                 self.hud.dismiss()
                 Toast.show(message: error.localizedDescription, controller: self)
@@ -103,6 +110,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 for document in snapshot!.documents {
                     let post = Post(document as DocumentSnapshot)
                     if (post.isVerified! == true) {
+                        self.postsList.append(post)
+                    }
+                    self.presentData()
+                }
+                self.hud.dismiss()
+            }
+        }
+    }
+    
+    func fetchDataWithString(_ searchString: String) {
+        hud.textLabel.text = "Searching..."
+        hud.show(in: self.view)
+
+        firestoreListener?.remove()
+        firestoreListener = db.collection("posts").addSnapshotListener { (snapshot, error) in
+            if let error = error {
+                Toast.show(message: error.localizedDescription, controller: self)
+            }
+            else {
+                self.postsList.removeAll()
+                for document in snapshot!.documents {
+                    let post = Post(document as DocumentSnapshot)
+                    if (post.isVerified! == true && ((searchString == "") ? true : ((post.title?.lowercased().contains(searchString.lowercased()))! ? true : false))) {
                         self.postsList.append(post)
                     }
                     self.presentData()
@@ -123,6 +153,32 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func callBackError(_ error: Error) {
         Toast.show(message: error.localizedDescription, controller: self)
+    }
+    
+    // MARK: - UISearchBarDelegate
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchQueue.addOperation {
+            Thread.sleep(forTimeInterval: 0.4)
+            DispatchQueue.main.async { [weak self] in
+                if (self!.postsSearchBar.text != searchText) {
+                    return
+                }
+                else {
+                    self!.fetchDataWithString(searchText)
+                }
+            }
+        }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        if (searchBar.text != "") {
+            fetchDataWithString(searchBar.text!)
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
     
 }

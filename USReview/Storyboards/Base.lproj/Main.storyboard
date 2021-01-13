@@ -430,15 +430,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wFE-Su-gyn">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wFE-Su-gyn" userLabel="Container">
                                 <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NDq-qE-HaA">
+                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Enter a title" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NDq-qE-HaA">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="56" id="sah-qn-i7H"/>
                                         </constraints>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                                <size key="value" width="0.0" height="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                                <color key="value" systemColor="systemGray4Color"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </searchBar>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hCf-Xb-uJb">
                                         <rect key="frame" x="0.0" y="56" width="414" height="713"/>
@@ -475,6 +489,8 @@
                         <offsetWrapper key="titlePositionAdjustment" horizontal="-20" vertical="0.0"/>
                     </tabBarItem>
                     <connections>
+                        <outlet property="containerBottomConstraint" destination="feK-YK-Kq9" id="Tkr-Fi-alg"/>
+                        <outlet property="postsSearchBar" destination="NDq-qE-HaA" id="WtT-Ht-aWC"/>
                         <outlet property="postsTableView" destination="hCf-Xb-uJb" id="w55-t2-NPK"/>
                     </connections>
                 </viewController>
@@ -736,6 +752,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="containerBottomConstraint" destination="aJB-hz-Ety" id="0wN-nQ-bXx"/>
                         <outlet property="myPostsTableView" destination="FqV-ot-YEY" id="mYM-5g-555"/>
                     </connections>
                 </viewController>
@@ -800,6 +817,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray4Color">
+            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
