@@ -114,8 +114,4 @@ class Post {
             return false
         }
     }
-    
-    func isHaveComments() -> Bool {
-        return (comments == nil) ? false : true
-    }
 }

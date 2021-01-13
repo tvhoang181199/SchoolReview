@@ -107,14 +107,13 @@ class PostTableViewCell: UITableViewCell {
         }
         
         // Comments
-//        if (post.isHaveComments()) {
-//            presentComments(post.comments)
-//        }
+        presentComments(post)
         
     }
     
-    func presentComments(_ comments: Array<Dictionary<String, Any>>?) {
-        for i in 0..<comments!.count {
+    func presentComments(_ post:Post) {
+        commentsStackView.removeAllArrangedSubviews()
+        for i in 0..<(post.comments?.count ?? 0) {
             let container = UIView()
             let commentImageView = UIImageView()
             let commentUserNameLabel = UILabel()
@@ -131,28 +130,29 @@ class PostTableViewCell: UITableViewCell {
             commentUserNameLabel.translatesAutoresizingMaskIntoConstraints = false
             commentContentLabel.translatesAutoresizingMaskIntoConstraints = false
             
-            container.widthAnchor.constraint(equalToConstant: commentsStackView.bounds.size.width).isActive = true
+            container.widthAnchor.constraint(equalToConstant: commentsStackView.superview!.bounds.size.width).isActive = true
+            container.heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
             
             commentImageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
             commentImageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
-            commentImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 15).isActive = true
-            commentImageView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 15).isActive = true
-            commentImageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 15).isActive = true
+            commentImageView.topAnchor.constraint(equalTo: commentImageView.superview!.topAnchor, constant: 15).isActive = true
+            commentImageView.bottomAnchor.constraint(equalTo: commentImageView.superview!.bottomAnchor, constant: 15).isActive = true
+            commentImageView.leadingAnchor.constraint(equalTo: commentImageView.superview!.leadingAnchor, constant: 15).isActive = true
             
-            commentUserNameLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 17).isActive = true
+            commentUserNameLabel.topAnchor.constraint(equalTo: commentUserNameLabel.superview!.topAnchor, constant: 17).isActive = true
             commentUserNameLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentUserNameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentUserNameLabel.trailingAnchor.constraint(equalTo: commentUserNameLabel.superview!.trailingAnchor, constant: -15).isActive = true
             commentUserNameLabel.heightAnchor.constraint(equalToConstant: 14).isActive = true
             
             commentContentLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentContentLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentContentLabel.trailingAnchor.constraint(equalTo: commentContentLabel.superview!.trailingAnchor, constant: -15).isActive = true
             commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 5).isActive = true
-            commentContentLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 15).isActive = true
+            commentContentLabel.bottomAnchor.constraint(equalTo: commentContentLabel.superview!.bottomAnchor, constant: 15).isActive = true
             
             // Set data
             commentImageView.contentMode = .scaleAspectFit
             commentImageView.layer.cornerRadius = commentImageView.bounds.size.width/2
-            switch comments![i]["schoolID"] as? String {
+            switch post.comments![i]["schoolID"] as? String {
             case "S000":
                 commentImageView.image = UIImage(named: "HCMUS_avatar")
             case "S001":
@@ -167,12 +167,12 @@ class PostTableViewCell: UITableViewCell {
             
             commentUserNameLabel.numberOfLines = 1
             commentUserNameLabel.font = UIFont(name: "GillSans-Bold", size: 15)
-            commentUserNameLabel.text = comments![i]["userName"] as? String
+            commentUserNameLabel.text = post.comments![i]["userName"] as? String
             
             commentContentLabel.numberOfLines = 0
             commentContentLabel.lineBreakMode = .byWordWrapping
             commentContentLabel.font = UIFont(name: "GillSans", size: 14)
-            commentContentLabel.text = comments![i]["content"] as? String
+            commentContentLabel.text = post.comments![i]["content"] as? String
             
             commentsStackView.addArrangedSubview(container)
         }

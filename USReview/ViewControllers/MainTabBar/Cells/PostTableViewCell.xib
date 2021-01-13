@@ -100,19 +100,11 @@
                                     <constraint firstAttribute="width" constant="30" id="Ebj-dG-UxM"/>
                                     <constraint firstAttribute="height" constant="30" id="YD9-wN-DHr"/>
                                 </constraints>
-                                <color key="tintColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal">
                                     <imageReference key="image" image="star" catalog="system" symbolScale="large"/>
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="medium" weight="regular"/>
                                 </state>
-                                <state key="disabled">
-                                    <imageReference key="image" image="star" catalog="system" symbolScale="large"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="medium" weight="regular"/>
-                                </state>
-                                <state key="selected">
-                                    <imageReference key="image" image="star.fill" catalog="system" symbolScale="large"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="medium" weight="regular"/>
-                                </state>
+                                <state key="selected" image="star.fill" catalog="system"/>
                                 <connections>
                                     <action selector="starButtonTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="hhn-3g-IBD"/>
                                 </connections>
@@ -143,7 +135,7 @@
                                     <constraint firstAttribute="height" constant="1" id="bI2-fo-8ju"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ISD-oH-3o5">
+                            <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ISD-oH-3o5">
                                 <rect key="frame" x="0.0" y="422.5" width="448" height="22.5"/>
                             </stackView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Leave a comment" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HcS-vf-G30">
