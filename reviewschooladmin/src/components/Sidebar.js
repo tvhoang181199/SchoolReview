@@ -21,13 +21,11 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import clsx from "clsx";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
 import { Link } from "@material-ui/core";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-
-// import IcAdmin from "../../assets/images/icon-admin.png";
-// import { startLogout } from "../../action/auth/action";
-// import { connect } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -109,17 +107,17 @@ const Sidebar = ({ onDrawerClose, open, logout }) => {
       redirect: () => history.push("/admin/manageuser"),
     },
     {
-      icon: <SportsEsportsIcon />,
-      text: "Reviews",
-      redirect: () => history.push("/admin/managegame"),
-    },
-    {
-      icon: <SupervisorAccountIcon />,
+      icon: <PersonAddIcon />,
       text: "Verify User",
       redirect: () => history.push("/admin/managegame"),
     },
     {
       icon: <SportsEsportsIcon />,
+      text: "Post",
+      redirect: () => history.push("/admin/managegame"),
+    },
+    {
+      icon: <PostAddIcon />,
       text: "Approve Post",
       redirect: () => history.push("/admin/managegame"),
     },
@@ -161,7 +159,6 @@ const Sidebar = ({ onDrawerClose, open, logout }) => {
       }}
     >
       <div className={classes.toolbar} style={{ display: "flex", justifyContent: "space-around" }}>
-        {/* <img src={""} height={40} weight={40} style={{ margin: "auto" }} /> */}
         <RouterLink to="/admin" style={{ margin: "auto" }}>
           <Typography variant="h6" style={{ color: "white" }}>
             Admin Desktop
@@ -196,7 +193,5 @@ const Sidebar = ({ onDrawerClose, open, logout }) => {
     </Drawer>
   );
 };
-// const mapDispatchToProps = { logout: startLogout };
-// export default connect(null, mapDispatchToProps)(Sidebar);
 
 export default Sidebar;

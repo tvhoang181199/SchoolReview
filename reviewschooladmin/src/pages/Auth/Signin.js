@@ -14,18 +14,24 @@ import { useDispatch } from "react-redux";
 const Signin = (props) => {
   const classes = useStyles();
   const [message, setMessage] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
 
   const handleSubmitLogin = (e) => {
     e.preventDefault();
-    const username = e.target.elements.username.value;
-    const password = e.target.elements.password.value;
+
+    if (!email || !password) {
+      setMessage({ type: "error", content: `Please fill out username and password !!!`, open: true });
+      return;
+    }
 
     auth()
-      .signInWithEmailAndPassword(username, password)
+      .signInWithEmailAndPassword(email, password)
       .then((user) => {
         console.log({ user });
         dispatch(actions.signin());
+        localStorage.setItem("user", JSON.stringify(user));
       })
       .catch((error) => {
         var errorCode = error.code;
@@ -51,13 +57,15 @@ const Signin = (props) => {
               </Typography>
               <form className={classes.form} noValidate onSubmit={handleSubmitLogin}>
                 <TextField
-                  id="username"
-                  autoComplete="username"
+                  id="email"
+                  autoComplete="email"
                   fullWidth
                   margin="normal"
                   required
-                  label="Username"
+                  label="Email"
                   variant="outlined"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className={classes.textFiled}
                 />
                 <TextField
@@ -69,6 +77,8 @@ const Signin = (props) => {
                   label="Password"
                   variant="outlined"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className={classes.textFiled}
                 />
                 <Button type="submit" variant="contained" color="primary" className={classes.button}>
