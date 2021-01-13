@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Typography, Breadcrumbs, Link, makeStyles, Grid } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import GamesIcon from "@material-ui/icons/Games";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { Link as RouterLink } from "react-router-dom";
 
 import "./style.css";
@@ -44,14 +46,18 @@ const Dashboard = (props) => {
   const getAllData = async () => {
     const usersList = await userApi.getUsersList();
     const postsList = await postApi.getPostsList();
-    const verifyUsers = usersList.filter((user) => user.verify !== 2);
-    const approvePosts = postsList.filter((post) => !post.verify);
+    const verifyUsers = usersList.filter((user) => user.isVerified === 1);
+    const approvePosts = postsList.filter((post) => !post.isVerified);
     dispatch(actions.initData({ usersList, postsList, verifyUsers, approvePosts }));
+  };
+
+  const fetchData = () => {
+    getAllData();
     setLoading(false);
   };
 
   useEffect(() => {
-    getAllData();
+    fetchData();
   }, []);
 
   return (
@@ -90,7 +96,7 @@ const Dashboard = (props) => {
                   <p>Verify Users</p>
                 </div>
                 <div className="icon">
-                  <PeopleAltIcon />
+                  <PersonAddIcon />
                 </div>
                 <Link to="/users" className="small-box-footer" component={RouterLink}>
                   More info
@@ -105,7 +111,7 @@ const Dashboard = (props) => {
                   <p>Posts</p>
                 </div>
                 <div className="icon">
-                  <GamesIcon />
+                  <AssignmentTurnedInIcon />
                 </div>
                 <Link to="/posts" className="small-box-footer" component={RouterLink}>
                   More info
@@ -120,7 +126,7 @@ const Dashboard = (props) => {
                   <p>Approve Posts</p>
                 </div>
                 <div className="icon">
-                  <PeopleAltIcon />
+                  <PostAddIcon />
                 </div>
                 <Link to="/users" className="small-box-footer" component={RouterLink}>
                   More info

@@ -28,6 +28,17 @@ export default (state = INITIAL_STATE, action) => {
         verifyUsers: action.payload.verifyUsers,
         approvePosts: action.payload.approvePosts,
       };
+    case types.BLOCK_USER_BY_EMAIL:
+      return {
+        ...state,
+        usersList: state.usersList.map((user) => (user.email === action.payload ? { ...user, isBlocked: true } : user)),
+      };
+    case types.VERIFY_USER_BY_EMAIL:
+      return {
+        ...state,
+        usersList: state.usersList.map((user) => (user.email === action.payload ? { ...user, isVerified: 2 } : user)),
+        verifyUsers: state.verifyUsers.filter((user) => user.email !== action.payload),
+      };
     default:
       return state;
   }

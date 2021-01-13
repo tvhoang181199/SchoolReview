@@ -9,17 +9,12 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import clsx from "clsx";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -112,7 +107,7 @@ const Sidebar = ({ onDrawerClose, open, logout }) => {
       redirect: () => history.push("/verifyusers"),
     },
     {
-      icon: <SportsEsportsIcon />,
+      icon: <AssignmentTurnedInIcon />,
       text: "Post",
       redirect: () => history.push("/posts"),
     },

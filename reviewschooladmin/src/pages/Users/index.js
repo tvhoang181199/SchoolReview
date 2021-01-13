@@ -7,7 +7,9 @@ import { Home, PeopleAlt } from "@material-ui/icons";
 import { Link as RouteLink } from "react-router-dom";
 import queryString from "query-string";
 import AddIcon from "@material-ui/icons/Add";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userApi } from "../../services";
+import actions from "../../redux/app/actions";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Users(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const usersList = useSelector((state) => state.app.usersList);
 
   const searchOptions = props.location.search ? queryString.parse(props.location.search) : null;
@@ -40,10 +43,11 @@ function Users(props) {
       const stt = i + 1;
       const email = user.email;
       const name = user.name;
-      const verified = user.isVerified ? "True" : "False";
+      const verified = user.isVerified === 0 ? "Not Verify" : user.isVerified === 1 ? "Pending" : "Verified";
       const blocked = user.isBlocked ? "True" : "False";
-      const actions = user._id;
-      return { stt, email, name, verified, blocked, actions };
+      const actions = user.userID;
+      const tableType = "users";
+      return { stt, email, name, verified, blocked, actions, tableType };
     });
   };
 
@@ -85,6 +89,20 @@ function Users(props) {
     users = users.filter((item) => item[key].toLowerCase().includes(searchOptions[key].toLowerCase()));
   }
 
+  const submitBlockUser = async (email) => {
+    try {
+      await userApi.blockUserByEmail(email);
+      dispatch(actions.blockUserByEmail(email));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBlockUser = (userID) => {
+    const user = usersList.find((user) => user.userID === userID);
+    submitBlockUser(user.email);
+  };
+
   const data = React.useMemo(() => generateData(users), [users]);
 
   return (
@@ -109,7 +127,7 @@ function Users(props) {
             </Button>
           </Grid>
         </Grid>
-        <Table columns={columns} data={data} />
+        <Table columns={columns} data={data} blockUser={handleBlockUser} />
       </div>
     </div>
   );

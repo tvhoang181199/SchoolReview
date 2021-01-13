@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import ConfirmModal from "./ConfirmModal";
 
-function Table({ columns, data, blockUser, secret, token }) {
+function Table({ columns, data, blockUser, verifyUser }) {
   const classes = useStyles();
   const history = useHistory();
   const [open, setOpen] = useState(false);
@@ -46,7 +46,45 @@ function Table({ columns, data, blockUser, secret, token }) {
 
   const handleBlockUser = () => {
     // blockUser(userId, secret, token);
+    console.log("BLOCK: ", userId);
+    blockUser(userId);
     setOpen(false);
+  };
+
+  const onVerifyUser = (userID) => {
+    console.log("VERIFY: ", userID);
+    verifyUser(userID);
+  };
+
+  const getActions = (status, value) => {
+    switch (status.tableType) {
+      case "verifyuser":
+        return (
+          <div className={classes.actions}>
+            <Button onClick={() => onVerifyUser(value)} variant="contained" size="small" color="primary">
+              Verify
+            </Button>
+          </div>
+        );
+
+      default:
+        return (
+          <div className={classes.actions}>
+            <Button onClick={() => history.push(`/users/${value}`)} variant="contained" size="small" color="primary">
+              View
+            </Button>
+            <Button
+              onClick={() => onBlockUser(value)}
+              variant="contained"
+              size="small"
+              color="secondary"
+              disabled={status.blocked == "True"}
+            >
+              {status.blocked == "False" ? "Block" : "Blocked"}
+            </Button>
+          </div>
+        );
+    }
   };
 
   return (
@@ -78,46 +116,9 @@ function Table({ columns, data, blockUser, secret, token }) {
                 {row.cells.map((cell) => {
                   return (
                     <td {...cell.getCellProps()}>
-                      {cell.column.Header === "Actions" ? (
-                        <>
-                          {cell.row.original.tableType == "game" ? (
-                            <div className={classes.actions}>
-                              <Button
-                                onClick={() =>
-                                  history.push(`/admin/managegame/${cell.value}`, { chatView: true, token })
-                                }
-                                variant="contained"
-                                size="small"
-                                color="primary"
-                              >
-                                View
-                              </Button>
-                            </div>
-                          ) : (
-                            <div className={classes.actions}>
-                              <Button
-                                onClick={() => history.push(`/admin/manageuser/${cell.value}`)}
-                                variant="contained"
-                                size="small"
-                                color="primary"
-                              >
-                                View
-                              </Button>
-                              <Button
-                                onClick={() => onBlockUser(cell.value)}
-                                variant="contained"
-                                size="small"
-                                color="secondary"
-                                disabled={cell.row.original.blocked == "True"}
-                              >
-                                {cell.row.original.blocked == "False" ? "Block" : "Blocked"}
-                              </Button>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        cell.render("Cell")
-                      )}
+                      {cell.column.Header === "Actions"
+                        ? getActions(cell.row.original, cell.value)
+                        : cell.render("Cell")}
                     </td>
                   );
                 })}
