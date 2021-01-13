@@ -6,9 +6,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Home, PeopleAlt } from "@material-ui/icons";
 import { Link as RouteLink } from "react-router-dom";
 import queryString from "query-string";
-import AddIcon from "@material-ui/icons/Add";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "../../redux/app/actions";
+import { userApi } from "../../services";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -42,7 +42,7 @@ function VerifyUsers(props) {
       const stt = i + 1;
       const email = user.email;
       const name = user.name;
-      const verified = user.isVerified == 0 ? "Not Verify" : user.isVerified == 1 ? "Pending" : "Verified";
+      const verified = user.isVerified === 0 ? "Not Verify" : user.isVerified === 1 ? "Pending" : "Verified";
       const blocked = user.isBlocked ? "True" : "False";
       const actions = user.userID;
       const tableType = "verifyuser";
@@ -98,7 +98,7 @@ function VerifyUsers(props) {
   };
 
   const handleVerifyUser = (userID) => {
-    const user = usersList.find((user) => user.userID === userID);
+    const user = verifyUsers.find((user) => user.userID === userID);
     submitVerifyUser(user.email);
   };
 
