@@ -165,7 +165,7 @@ class ProfileViewController: UIViewController {
     
     @IBAction func logoutButtonTapped(_ sender: Any) {
         if let appDomain = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: appDomain)
+            currentUser.removePersistentDomain(forName: appDomain)
         }
         try! Auth.auth().signOut()
         let loginNavigationController = UIStoryboard.loginNavigationController()

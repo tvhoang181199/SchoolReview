@@ -58,11 +58,20 @@ class PostTableViewCell: UITableViewCell {
         userNameLabel.text = post.userName
         postTitleLabel.text = post.title
         postContentLabel.text = post.content
+        
         // formatter for createdDate
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, dd MMMM yyyy 'at' HH:mm"
         createdDateLabel.text = formatter.string(from: post.createdDate!.dateValue())
         likesCountLabel.text = Utils.suffixNumber(number: post.likes!)
+        
+        // Edit button
+        if (post.userID == currentUser.string(forKey: "userID")) {
+            editButton.isHidden = false
+        }
+        else {
+            editButton.isHidden = true
+        }
         
         // Hard code school image
         switch post.schoolID {

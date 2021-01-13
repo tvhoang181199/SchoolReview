@@ -8,11 +8,12 @@
 import UIKit
 
 import FirebaseFirestore
+import FirebaseAuth
 
 import SCLAlertView
 import JGProgressHUD
 
-class AddPostViewController: UIViewController, UITextViewDelegate {
+class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBlockedProtocol {
     
     @IBOutlet weak var titleLabel: UILabel!
     
@@ -62,10 +63,14 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             keyboardHeight = keyboardSize.height
+            contentViewBottom.constant = 15 + keyboardHeight
+            containerHeight.constant = safeViewHeight - 50 + keyboardHeight
         }
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        contentViewBottom.constant = 15
+        containerHeight.constant = safeViewHeight - 50
     }
     
     // MARK: - UIButton actions
@@ -135,6 +140,8 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func closeButtonTapped(_ sender: Any) {
+        titleTextField.resignFirstResponder()
+        contentTextView.resignFirstResponder()
         let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
         alertView.addButton("Yes") {
             self.dismiss(animated: true, completion: nil)
@@ -150,8 +157,6 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             textView.text = ""
             textView.textColor = UIColor.black
         }
-        contentViewBottom.constant = 15 + keyboardHeight
-        containerHeight.constant = safeViewHeight - 50 + keyboardHeight
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -159,7 +164,19 @@ class AddPostViewController: UIViewController, UITextViewDelegate {
             textView.text = "Content"
             textView.textColor = UIColor.systemGray4
         }
-        contentViewBottom.constant = 15
-        containerHeight.constant = safeViewHeight - 50
+    }
+    
+    // MARK: - Check User Blocked Protocol
+    func userWasBlocked() {
+        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+        alertView.addButton("OK") {
+            if let appDomain = Bundle.main.bundleIdentifier {
+                self.currentUser.removePersistentDomain(forName: appDomain)
+            }
+            try! Auth.auth().signOut()
+            let loginNavigationController = UIStoryboard.loginNavigationController()
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
+        }
+        alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
     }
 }

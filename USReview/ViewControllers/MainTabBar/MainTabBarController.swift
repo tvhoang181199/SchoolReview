@@ -7,19 +7,32 @@
 
 import UIKit
 
+import FirebaseFirestore
+import FirebaseAuth
+
 import SCLAlertView
+
+protocol CheckUserBlockedProtocol {
+    func userWasBlocked()
+}
 
 class MainTabBarController: UITabBarController {
     
+    var isUserBlockedListener: CheckUserBlockedProtocol!
+    
+    // Quick access properties
     let currentUser = UserDefaults.standard
+    let db = Firestore.firestore()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        setupMiddleButton()
+        
+        setupCenterButton()
+        
+        backgroundCheckAccountStatus()
     }
 
-    func setupMiddleButton() {
+    func setupCenterButton() {
         let addButton = UIButton(frame: CGRect(x: self.tabBar.frame.size.width/2 - 25, y: -25, width: 50, height: 50))
         addButton.backgroundColor = UIColor.white
         addButton.layer.cornerRadius = 25
@@ -44,7 +57,40 @@ class MainTabBarController: UITabBarController {
         else {
             let vc = UIStoryboard.addPostViewController()
             vc!.modalPresentationStyle = .fullScreen
+//            self.isUserBlockedListener = vc
             self.present(vc!, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: - Background check account status
+    func backgroundCheckAccountStatus() {
+        db.collection("users").document(currentUser.string(forKey: "email")!).addSnapshotListener { (snapshot, error) in
+            if let error = error {
+                Toast.show(message: error.localizedDescription, controller: self)
+            }
+            else {
+                print("Check account blocked listener is in background...")
+                if ((snapshot?.data()!["isBlocked"] as? Bool) == true) {
+                    let topMostVC = UIApplication.getTopMostViewController()!
+                    if (topMostVC == self) {
+                        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+                        alertView.addButton("OK") {
+                            if let appDomain = Bundle.main.bundleIdentifier {
+                                self.currentUser.removePersistentDomain(forName: appDomain)
+                            }
+                            try! Auth.auth().signOut()
+                            let loginNavigationController = UIStoryboard.loginNavigationController()
+                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
+                        }
+                        alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
+                    }
+                    else {
+                        self.isUserBlockedListener = topMostVC as? CheckUserBlockedProtocol
+                        self.isUserBlockedListener.userWasBlocked()
+                    }
+                    
+                }
+            }
         }
     }
 
