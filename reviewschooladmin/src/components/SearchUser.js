@@ -12,9 +12,7 @@ import Grow from "@material-ui/core/Grow";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import CheckIcon from "@material-ui/icons/Check";
 import qs from "query-string";
-import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
