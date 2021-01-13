@@ -104,22 +104,22 @@ const Sidebar = ({ onDrawerClose, open, logout }) => {
     {
       icon: <SupervisorAccountIcon />,
       text: "Users",
-      redirect: () => history.push("/admin/manageuser"),
+      redirect: () => history.push("/users"),
     },
     {
       icon: <PersonAddIcon />,
       text: "Verify User",
-      redirect: () => history.push("/admin/managegame"),
+      redirect: () => history.push("/verifyusers"),
     },
     {
       icon: <SportsEsportsIcon />,
       text: "Post",
-      redirect: () => history.push("/admin/managegame"),
+      redirect: () => history.push("/posts"),
     },
     {
       icon: <PostAddIcon />,
       text: "Approve Post",
-      redirect: () => history.push("/admin/managegame"),
+      redirect: () => history.push("/approveposts"),
     },
   ];
 
@@ -159,7 +159,7 @@ const Sidebar = ({ onDrawerClose, open, logout }) => {
       }}
     >
       <div className={classes.toolbar} style={{ display: "flex", justifyContent: "space-around" }}>
-        <RouterLink to="/admin" style={{ margin: "auto" }}>
+        <RouterLink to="/" style={{ margin: "auto" }}>
           <Typography variant="h6" style={{ color: "white" }}>
             Admin Desktop
           </Typography>

@@ -147,6 +147,15 @@
   color: #fff !important;
 }
 
+.bg-error {
+  background-color: #dc3545 !important;
+}
+
+.bg-error,
+.bg-error > a {
+  color: #fff !important;
+}
+
 .bg-warning {
   background-color: #ffc107 !important;
 }
@@ -154,4 +163,13 @@
 .bg-warning,
 .bg-warning > a {
   color: #1f2d3d !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-success,
+.bg-success > a {
+  color: #fff !important;
 }

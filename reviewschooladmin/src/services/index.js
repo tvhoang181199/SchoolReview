@@ -1,3 +1,2 @@
-export { default as boardApi } from "./boardApi";
-export { default as authApi } from "./authApi";
-export { default as cardApi } from "./cardApi";
+export { default as userApi } from "./userApi";
+export { default as postApi } from "./postApi";

@@ -3,9 +3,10 @@ import * as types from "./types";
 const INITIAL_STATE = {
   isAuthenticated: false,
   token: "",
-  user: {},
-  boards: [],
-  cards: [],
+  usersList: [],
+  postsList: [],
+  verifyUsers: [],
+  approvePost: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -18,6 +19,14 @@ export default (state = INITIAL_STATE, action) => {
     case types.SIGNOUT:
       return {
         ...INITIAL_STATE,
+      };
+    case types.INIT_DATA:
+      return {
+        ...state,
+        usersList: action.payload.usersList,
+        postsList: action.payload.postsList,
+        verifyUsers: action.payload.verifyUsers,
+        approvePosts: action.payload.approvePosts,
       };
     default:
       return state;

@@ -13,6 +13,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import qs from "query-string";
+import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,7 +87,7 @@ const SearchUser = (props) => {
     if (searchContent) {
       const query = { [option]: searchContent };
       props.history.replace({
-        pathname: "/admin/manageuser",
+        pathname: "/users",
         search: qs.stringify(query),
       });
       searchRef.current.value = "";
@@ -124,4 +125,4 @@ const SearchUser = (props) => {
     </Paper>
   );
 };
-export default SearchUser;
+export default withRouter(SearchUser);
