@@ -6,8 +6,12 @@
 //
 
 import UIKit
+
+import FirebaseFirestore
+import FirebaseAuth
+
 import JGProgressHUD
-import Firebase
+import SCLAlertView
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
@@ -69,9 +73,36 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 Toast.show(message: error!.localizedDescription, controller: self)
             }
             else {
-                self.hud.dismiss()
-                let mainTabBarController = UIStoryboard.mainTabbarController()
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
+                self.db.collection("users").document(email).getDocument { (snapshot, error) in
+                    if let error = error {
+                        self.hud.dismiss()
+                        Toast.show(message: error.localizedDescription, controller: self)
+                    }
+                    else {
+                        self.hud.dismiss()
+                        
+                        // If user has been blocked
+                        if ((snapshot?.data()!["isBlocked"] as? Bool) == true) {
+                            let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+                            alertView.addButton("OK") {
+                            }
+                            alertView.showError("Error", subTitle: "Your account has been blocked by admin. Please contact admin for more information.")
+                        }
+                        else {
+                            // Set data for after login flow                            
+                            Utils.setUserDefaults(name: snapshot?.data()!["name"] as! String,
+                                                  schoolID: snapshot?.data()!["schoolID"] as! String,
+                                                  email: snapshot?.data()!["email"] as! String,
+                                                  userID: snapshot?.data()!["userID"] as! String,
+                                                  role: snapshot?.data()!["role"] as! Int,
+                                                  isVerified: snapshot?.data()!["isVerified"] as! Int)
+                            
+                            // Change root view to main tab bar
+                            let mainTabBarController = UIStoryboard.mainTabBarController()
+                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController!)
+                        }
+                    }
+                }
             }
         }  
     }
