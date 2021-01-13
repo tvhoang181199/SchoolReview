@@ -135,7 +135,7 @@
                                     <constraint firstAttribute="height" constant="1" id="bI2-fo-8ju"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ISD-oH-3o5">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ISD-oH-3o5">
                                 <rect key="frame" x="0.0" y="422.5" width="448" height="22.5"/>
                             </stackView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Leave a comment" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HcS-vf-G30">
@@ -244,6 +244,7 @@
             <connections>
                 <outlet property="commentButton" destination="47N-JK-uON" id="Rf2-8T-aqa"/>
                 <outlet property="commentTextField" destination="HcS-vf-G30" id="5cM-DB-kXp"/>
+                <outlet property="commentTextFieldTopConstraint" destination="Z1P-PI-IyL" id="LDt-RL-a7R"/>
                 <outlet property="commentsStackView" destination="ISD-oH-3o5" id="J6N-Y7-mrB"/>
                 <outlet property="createdDateLabel" destination="I3j-tw-Ida" id="XDI-aY-ODE"/>
                 <outlet property="editButton" destination="OLJ-lC-XWy" id="HgT-RJ-W5z"/>

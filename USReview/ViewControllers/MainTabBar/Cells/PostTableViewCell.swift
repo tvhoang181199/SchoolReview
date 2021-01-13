@@ -29,6 +29,7 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var commentTextField: UITextField!
     @IBOutlet weak var commentButton: UIButton!
+    @IBOutlet weak var commentTextFieldTopConstraint: NSLayoutConstraint!
     
     var delegate: PostCellProtocol!
     var postData: Post? = nil
@@ -39,7 +40,7 @@ class PostTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -48,6 +49,8 @@ class PostTableViewCell: UITableViewCell {
     }
     
     func setPost(_ post:Post) {
+        commentTextFieldTopConstraint.constant = 15
+        
         // Prepare data for edit
         postData = post
         
@@ -114,6 +117,10 @@ class PostTableViewCell: UITableViewCell {
     func presentComments(_ post:Post) {
         commentsStackView.removeAllArrangedSubviews()
         for i in 0..<(post.comments?.count ?? 0) {
+            // Comments exists
+            commentTextFieldTopConstraint.constant = 0
+            
+            // Create comment row
             let container = UIView()
             let commentImageView = UIImageView()
             let commentUserNameLabel = UILabel()
@@ -131,23 +138,22 @@ class PostTableViewCell: UITableViewCell {
             commentContentLabel.translatesAutoresizingMaskIntoConstraints = false
             
             container.widthAnchor.constraint(equalToConstant: commentsStackView.superview!.bounds.size.width).isActive = true
-            container.heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
+            container.heightAnchor.constraint(greaterThanOrEqualToConstant: 55).isActive = true
             
+            commentImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 10).isActive = true
+            commentImageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 15).isActive = true
             commentImageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
             commentImageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
-            commentImageView.topAnchor.constraint(equalTo: commentImageView.superview!.topAnchor, constant: 15).isActive = true
-            commentImageView.bottomAnchor.constraint(equalTo: commentImageView.superview!.bottomAnchor, constant: 15).isActive = true
-            commentImageView.leadingAnchor.constraint(equalTo: commentImageView.superview!.leadingAnchor, constant: 15).isActive = true
             
-            commentUserNameLabel.topAnchor.constraint(equalTo: commentUserNameLabel.superview!.topAnchor, constant: 17).isActive = true
             commentUserNameLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentUserNameLabel.trailingAnchor.constraint(equalTo: commentUserNameLabel.superview!.trailingAnchor, constant: -15).isActive = true
-            commentUserNameLabel.heightAnchor.constraint(equalToConstant: 14).isActive = true
+            commentUserNameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentUserNameLabel.topAnchor.constraint(equalTo: commentImageView.topAnchor, constant: 3).isActive = true
+//            commentUserNameLabel.heightAnchor.constraint(equalToConstant: 14).isActive = true
             
             commentContentLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentContentLabel.trailingAnchor.constraint(equalTo: commentContentLabel.superview!.trailingAnchor, constant: -15).isActive = true
-            commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 5).isActive = true
-            commentContentLabel.bottomAnchor.constraint(equalTo: commentContentLabel.superview!.bottomAnchor, constant: 15).isActive = true
+            commentContentLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 0).isActive = true
+            commentContentLabel.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -10).isActive = true
             
             // Set data
             commentImageView.contentMode = .scaleAspectFit
@@ -173,7 +179,7 @@ class PostTableViewCell: UITableViewCell {
             commentContentLabel.lineBreakMode = .byWordWrapping
             commentContentLabel.font = UIFont(name: "GillSans", size: 14)
             commentContentLabel.text = post.comments![i]["content"] as? String
-            
+
             commentsStackView.addArrangedSubview(container)
         }
         
