@@ -16,6 +16,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var postsTableView: UITableView!
     @IBOutlet weak var postsSearchBar: UISearchBar!
+    @IBOutlet weak var emptyPostLabel: UILabel!
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     
     // Quick access properties
@@ -33,6 +34,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emptyPostLabel.alpha = 1
+        emptyPostLabel.isHidden = true
         
         // Setup searchbar
         postsSearchBar.delegate = self
@@ -98,27 +102,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     // MARK: - fetchData
-    func fetchData() {
-        hud.show(in: self.view)
-        firestoreListener = db.collection("posts").order(by: "createdDate", descending: true).addSnapshotListener() { (snapshot, error) in
-            if let error = error {
-                self.hud.dismiss()
-                Toast.show(message: error.localizedDescription, controller: self)
-            }
-            else {
-                self.postsList.removeAll()
-                for document in snapshot!.documents {
-                    let post = Post(document as DocumentSnapshot)
-                    if (post.isVerified! == true) {
-                        self.postsList.append(post)
-                    }
-                    self.presentData()
-                }
-                self.hud.dismiss()
-            }
-        }
-    }
-    
     func fetchDataWithString(_ searchString: String) {
         hud.textLabel.text = (searchString == "") ? "" : "Searching..."
         hud.show(in: self.view)
@@ -126,6 +109,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         firestoreListener?.remove()
         firestoreListener = db.collection("posts").order(by: "createdDate", descending: true).addSnapshotListener { (snapshot, error) in
             if let error = error {
+                self.hud.dismiss()
                 Toast.show(message: error.localizedDescription, controller: self)
             }
             else {
@@ -138,6 +122,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.presentData()
                 }
                 self.hud.dismiss()
+                
+                // Check if postsList is empty
+                if self.postsList.count == 0 {
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0.1,
+                                   options: .curveEaseOut) {
+                        self.emptyPostLabel.alpha = 1
+                    } completion: { (value) in
+                        self.emptyPostLabel.isHidden = false
+                    }
+                }
+                else {
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0.1,
+                                   options: .curveEaseOut) {
+                        self.emptyPostLabel.alpha = 0
+                    } completion: { (value) in
+                        self.emptyPostLabel.isHidden = true
+                    }
+                }
             }
         }
     }

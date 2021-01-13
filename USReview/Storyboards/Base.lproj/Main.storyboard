@@ -462,14 +462,25 @@
                                             <outlet property="delegate" destination="ffs-a1-Chp" id="k9e-uA-wnz"/>
                                         </connections>
                                     </tableView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No posts found!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJn-Nj-Py5">
+                                        <rect key="frame" x="0.0" y="56" width="414" height="713"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="25"/>
+                                        <color key="textColor" systemColor="systemGray2Color"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="wJn-Nj-Py5" firstAttribute="leading" secondItem="wFE-Su-gyn" secondAttribute="leading" id="Ggh-tz-va4"/>
                                     <constraint firstItem="NDq-qE-HaA" firstAttribute="leading" secondItem="wFE-Su-gyn" secondAttribute="leading" id="JOj-Kl-mob"/>
                                     <constraint firstAttribute="trailing" secondItem="hCf-Xb-uJb" secondAttribute="trailing" id="Lan-rd-ENC"/>
                                     <constraint firstItem="hCf-Xb-uJb" firstAttribute="leading" secondItem="wFE-Su-gyn" secondAttribute="leading" id="RZz-g2-UQg"/>
                                     <constraint firstItem="NDq-qE-HaA" firstAttribute="top" secondItem="wFE-Su-gyn" secondAttribute="top" id="bii-bN-wfS"/>
+                                    <constraint firstItem="wJn-Nj-Py5" firstAttribute="bottom" secondItem="hCf-Xb-uJb" secondAttribute="bottom" id="cbv-jA-FmW"/>
+                                    <constraint firstAttribute="trailing" secondItem="wJn-Nj-Py5" secondAttribute="trailing" id="hx0-8K-AJc"/>
                                     <constraint firstAttribute="trailing" secondItem="NDq-qE-HaA" secondAttribute="trailing" id="npf-QZ-azT"/>
+                                    <constraint firstItem="wJn-Nj-Py5" firstAttribute="top" secondItem="NDq-qE-HaA" secondAttribute="bottom" id="oSL-uv-PGx"/>
                                     <constraint firstItem="hCf-Xb-uJb" firstAttribute="top" secondItem="NDq-qE-HaA" secondAttribute="bottom" id="orC-We-xoV"/>
                                     <constraint firstAttribute="bottom" secondItem="hCf-Xb-uJb" secondAttribute="bottom" id="qNv-oL-GbT"/>
                                 </constraints>
@@ -490,13 +501,14 @@
                     </tabBarItem>
                     <connections>
                         <outlet property="containerBottomConstraint" destination="feK-YK-Kq9" id="Tkr-Fi-alg"/>
+                        <outlet property="emptyPostLabel" destination="wJn-Nj-Py5" id="1Fp-Ma-XKC"/>
                         <outlet property="postsSearchBar" destination="NDq-qE-HaA" id="WtT-Ht-aWC"/>
                         <outlet property="postsTableView" destination="hCf-Xb-uJb" id="w55-t2-NPK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bLL-bb-qFm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4343" y="65"/>
+            <point key="canvasLocation" x="4342.0289855072469" y="64.955357142857139"/>
         </scene>
         <!--Add Post View Controller-->
         <scene sceneID="Apc-gD-WCP">
@@ -817,6 +829,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray2Color">
+            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray4Color">
             <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
