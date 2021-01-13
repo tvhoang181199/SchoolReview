@@ -20,6 +20,7 @@ class Post {
     var isVerified: Bool? = false
     var createdDate: Timestamp? = nil
     var likedUsers: Dictionary<String, Bool>? = nil
+    var comments: Array<Dictionary<String, Any>>? = nil
     
     init(postID: String?, schoolID: String?, userID: String?, userName: String?, title: String?, content: String?, likes: Int?, isVerified: Bool?, createdDate: Timestamp?) {
         self.postID = postID
@@ -56,6 +57,7 @@ class Post {
         self.isVerified = snapshotData.data()!["isVerified"] as? Bool
         self.createdDate = snapshotData.data()!["createdDate"] as? Timestamp
         self.likedUsers = snapshotData.data()!["likedUsers"] as? Dictionary<String, Bool>
+        self.comments = snapshotData.data()!["comments"] as? Array<Dictionary<String, Any>>
     }
     
     func setPost(postID: String?, schoolID: String?, userID: String?, userName: String?, title: String?, content: String?, likes: Int?, isVerified: Bool?, createdDate: Timestamp?) {
@@ -93,6 +95,7 @@ class Post {
         self.isVerified = snapshotData.data()!["isVerified"] as? Bool
         self.createdDate = snapshotData.data()!["createdDate"] as? Timestamp
         self.likedUsers = snapshotData.data()!["likedUsers"] as? Dictionary<String, Bool>
+        self.comments = snapshotData.data()!["comments"] as? Array<Dictionary<String, Any>>
     }
     
     func isCurrentUserLikedPost() -> Bool {
@@ -110,5 +113,9 @@ class Post {
             }
             return false
         }
+    }
+    
+    func isHaveComments() -> Bool {
+        return (comments == nil) ? false : true
     }
 }

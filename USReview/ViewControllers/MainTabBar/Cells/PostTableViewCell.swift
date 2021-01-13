@@ -106,10 +106,84 @@ class PostTableViewCell: UITableViewCell {
             likeButton.isSelected = false
         }
         
+        // Comments
+//        if (post.isHaveComments()) {
+//            presentComments(post.comments)
+//        }
+        
     }
+    
+    func presentComments(_ comments: Array<Dictionary<String, Any>>?) {
+        for i in 0..<comments!.count {
+            let container = UIView()
+            let commentImageView = UIImageView()
+            let commentUserNameLabel = UILabel()
+            let commentContentLabel = UILabel()
+            
+            // Add to container
+            container.addSubview(commentImageView)
+            container.addSubview(commentUserNameLabel)
+            container.addSubview(commentContentLabel)
+            
+            // Auto layout
+            container.translatesAutoresizingMaskIntoConstraints = false
+            commentImageView.translatesAutoresizingMaskIntoConstraints = false
+            commentUserNameLabel.translatesAutoresizingMaskIntoConstraints = false
+            commentContentLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            container.widthAnchor.constraint(equalToConstant: commentsStackView.bounds.size.width).isActive = true
+            
+            commentImageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            commentImageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
+            commentImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 15).isActive = true
+            commentImageView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 15).isActive = true
+            commentImageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 15).isActive = true
+            
+            commentUserNameLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 17).isActive = true
+            commentUserNameLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
+            commentUserNameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentUserNameLabel.heightAnchor.constraint(equalToConstant: 14).isActive = true
+            
+            commentContentLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
+            commentContentLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 5).isActive = true
+            commentContentLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 15).isActive = true
+            
+            // Set data
+            commentImageView.contentMode = .scaleAspectFit
+            commentImageView.layer.cornerRadius = commentImageView.bounds.size.width/2
+            switch comments![i]["schoolID"] as? String {
+            case "S000":
+                commentImageView.image = UIImage(named: "HCMUS_avatar")
+            case "S001":
+                commentImageView.image = UIImage(named: "HCMUSSH_avatar")
+            case "S002":
+                commentImageView.image = UIImage(named: "UEL_avatar")
+            case "S003":
+                commentImageView.image = UIImage(named: "UIT_avatar")
+            default:
+                break
+            }
+            
+            commentUserNameLabel.numberOfLines = 1
+            commentUserNameLabel.font = UIFont(name: "GillSans-Bold", size: 15)
+            commentUserNameLabel.text = comments![i]["userName"] as? String
+            
+            commentContentLabel.numberOfLines = 0
+            commentContentLabel.lineBreakMode = .byWordWrapping
+            commentContentLabel.font = UIFont(name: "GillSans", size: 14)
+            commentContentLabel.text = comments![i]["content"] as? String
+            
+            commentsStackView.addArrangedSubview(container)
+        }
+        
+    }
+    
+    // MARK: - Button actions
 
     @IBAction func starButtonTapped(_ sender: Any) {
         if (likeButton.isSelected == false) {
+            likeButton.isEnabled = false
             db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":[
                                                                                 currentUser.string(forKey: "userID"):true],
                                                                              "likes": ((postData?.likes)!+1)
@@ -118,11 +192,12 @@ class PostTableViewCell: UITableViewCell {
                     self.delegate.callBackError(error)
                 }
                 else {
-                    self.likeButton.isSelected = true
+                    self.likeButton.isEnabled = true
                 }
             }
         }
         else if (likeButton.isSelected == true) {
+            likeButton.isEnabled = false
             db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":[
                                                                                 currentUser.string(forKey: "userID"):false],
                                                                              "likes": ((postData?.likes)!-1)
@@ -131,7 +206,7 @@ class PostTableViewCell: UITableViewCell {
                     self.delegate.callBackError(error)
                 }
                 else {
-                    self.likeButton.isSelected = false
+                    self.likeButton.isEnabled = true
                 }
             }
         }
@@ -139,6 +214,28 @@ class PostTableViewCell: UITableViewCell {
     
     @IBAction func editButtonTapped(_ sender: Any) {
         self.delegate.editPostDidTapped(postData!)
+    }
+    
+    @IBAction func sendCommentTapped(_ sender: Any) {
+        if (commentTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+            db.collection("posts").document((postData?.postID)!).updateData(["comments":FieldValue.arrayUnion([[
+                "userID": currentUser.string(forKey: "userID")!,
+                "userName": currentUser.string(forKey: "name")!,
+                "schoolID": currentUser.string(forKey: "schoolID")!,
+                "content": commentTextField.text!,
+                "createdAt": Date()
+            ]])
+            ]) { (error) in
+                if let error = error {
+                    self.delegate.callBackError(error)
+                }
+                else {
+                    // do something that i still dont know :))
+                }
+            }
+        }
+        commentTextField.text = ""
+        commentTextField.resignFirstResponder()
     }
     
 }
