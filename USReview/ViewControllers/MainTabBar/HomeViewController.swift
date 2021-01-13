@@ -46,7 +46,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        fetchData()
+        fetchDataWithString("")
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -120,11 +120,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func fetchDataWithString(_ searchString: String) {
-        hud.textLabel.text = "Searching..."
+        hud.textLabel.text = (searchString == "") ? "" : "Searching..."
         hud.show(in: self.view)
 
         firestoreListener?.remove()
-        firestoreListener = db.collection("posts").addSnapshotListener { (snapshot, error) in
+        firestoreListener = db.collection("posts").order(by: "createdDate", descending: true).addSnapshotListener { (snapshot, error) in
             if let error = error {
                 Toast.show(message: error.localizedDescription, controller: self)
             }
@@ -153,6 +153,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func callBackError(_ error: Error) {
         Toast.show(message: error.localizedDescription, controller: self)
+    }
+    
+    func deleteCommentCallBack(post: Post, index: Int) {
+        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+        alertView.addButton("Yes") {
+            self.db.collection("posts").document(post.postID!).updateData(["comments": FieldValue.arrayRemove([[
+                "userID": post.comments![index]["userID"] as! String,
+                "userName": post.comments![index]["userName"] as! String,
+                "schoolID": post.comments![index]["schoolID"] as! String,
+                "content": post.comments![index]["content"] as! String,
+                "commentID": post.comments![index]["commentID"] as! String
+            ]])
+            ])
+        }
+        alertView.addButton("No") {
+        }
+        alertView.showWarning("Warning", subTitle: "Do you want to delete you comment?")
     }
     
     // MARK: - UISearchBarDelegate

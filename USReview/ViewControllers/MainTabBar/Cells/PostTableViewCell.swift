@@ -12,6 +12,7 @@ import FirebaseFirestore
 protocol PostCellProtocol {
     func editPostDidTapped(_ data: Post)
     func callBackError(_ error: Error)
+    func deleteCommentCallBack(post: Post, index: Int)
 }
 
 class PostTableViewCell: UITableViewCell {
@@ -134,20 +135,28 @@ class PostTableViewCell: UITableViewCell {
             let commentImageView = UIImageView()
             let commentUserNameLabel = UILabel()
             let commentContentLabel = UILabel()
+            let deleteCommentButton = UIButton()
             
             // Add to container
             container.addSubview(commentImageView)
             container.addSubview(commentUserNameLabel)
             container.addSubview(commentContentLabel)
+            container.addSubview(deleteCommentButton)
             
             // Auto layout
             container.translatesAutoresizingMaskIntoConstraints = false
             commentImageView.translatesAutoresizingMaskIntoConstraints = false
             commentUserNameLabel.translatesAutoresizingMaskIntoConstraints = false
             commentContentLabel.translatesAutoresizingMaskIntoConstraints = false
+            deleteCommentButton.translatesAutoresizingMaskIntoConstraints = false
             
             container.widthAnchor.constraint(equalToConstant: commentsStackView.superview!.bounds.size.width).isActive = true
             container.heightAnchor.constraint(greaterThanOrEqualToConstant: 55).isActive = true
+            
+            deleteCommentButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            deleteCommentButton.heightAnchor.constraint(equalToConstant: 12).isActive = true
+            deleteCommentButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            deleteCommentButton.topAnchor.constraint(equalTo: commentContentLabel.topAnchor, constant: 2).isActive = true
             
             commentImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 10).isActive = true
             commentImageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 15).isActive = true
@@ -155,11 +164,11 @@ class PostTableViewCell: UITableViewCell {
             commentImageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
             
             commentUserNameLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentUserNameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentUserNameLabel.trailingAnchor.constraint(equalTo: deleteCommentButton.leadingAnchor, constant: -5).isActive = true
             commentUserNameLabel.topAnchor.constraint(equalTo: commentImageView.topAnchor, constant: 3).isActive = true
             
             commentContentLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentContentLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            commentContentLabel.trailingAnchor.constraint(equalTo: deleteCommentButton.leadingAnchor, constant: -5).isActive = true
             commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 0).isActive = true
             commentContentLabel.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -10).isActive = true
             
@@ -187,10 +196,26 @@ class PostTableViewCell: UITableViewCell {
             commentContentLabel.lineBreakMode = .byWordWrapping
             commentContentLabel.font = UIFont(name: "GillSans", size: 14)
             commentContentLabel.text = post.comments![i]["content"] as? String
-
+            
+            if (post.comments![i]["userID"] as? String == currentUser.string(forKey: "userID")) {
+                deleteCommentButton.isHidden = false
+            }
+            else {
+                deleteCommentButton.isHidden = true
+            }
+            deleteCommentButton.tag = i
+            deleteCommentButton.setTitle("Delete", for: .normal)
+            deleteCommentButton.setTitleColor(.red, for: .normal)
+            deleteCommentButton.titleLabel?.font = UIFont(name: "GillSans", size: 10)
+            deleteCommentButton.addTarget(self, action: #selector(deleteCommentButtonTapped), for: .touchUpInside)
+            
             commentsStackView.addArrangedSubview(container)
         }
         
+    }
+    
+    @objc func deleteCommentButtonTapped(_ sender: UIButton) {
+        self.delegate.deleteCommentCallBack(post: postData!, index: sender.tag)
     }
     
     // MARK: - Button actions
@@ -232,12 +257,13 @@ class PostTableViewCell: UITableViewCell {
     
     @IBAction func sendCommentTapped(_ sender: Any) {
         if (commentTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+            let commentID = UUID().uuidString
             db.collection("posts").document((postData?.postID)!).updateData(["comments":FieldValue.arrayUnion([[
                 "userID": currentUser.string(forKey: "userID")!,
                 "userName": currentUser.string(forKey: "name")!,
                 "schoolID": currentUser.string(forKey: "schoolID")!,
                 "content": commentTextField.text!,
-                "createdAt": Date()
+                "commentID": commentID
             ]])
             ]) { (error) in
                 if let error = error {

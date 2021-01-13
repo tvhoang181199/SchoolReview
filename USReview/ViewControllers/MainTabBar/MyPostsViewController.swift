@@ -138,6 +138,23 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         Toast.show(message: error.localizedDescription, controller: self)
     }
     
+    func deleteCommentCallBack(post: Post, index: Int) {
+        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+        alertView.addButton("Yes") {
+            self.db.collection("posts").document(post.postID!).updateData(["comments": FieldValue.arrayRemove([[
+                "userID": post.comments![index]["userID"] as! String,
+                "userName": post.comments![index]["userName"] as! String,
+                "schoolID": post.comments![index]["schoolID"] as! String,
+                "content": post.comments![index]["content"] as! String,
+                "commentID": post.comments![index]["commentID"] as! String
+            ]])
+            ])
+        }
+        alertView.addButton("No") {
+        }
+        alertView.showWarning("Warning", subTitle: "Do you want to delete you comment?")
+    }
+    
     // MARK: - Check User Blocked Protocol
     func userWasBlocked() {
         let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
