@@ -12,7 +12,7 @@ import FirebaseFirestore
 import SCLAlertView
 import JGProgressHUD
 
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, PostCellProtocol {
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, PostCellProtocol, UIScrollViewDelegate {
 
     @IBOutlet weak var postsTableView: UITableView!
     @IBOutlet weak var postsSearchBar: UISearchBar!
@@ -25,12 +25,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let hud = JGProgressHUD(style: .dark)
     
     // Data properties
+    var maxPostsFetched: Int = 5
     var postsList = [Post]()
     
     // Listener
     var firestoreListener: ListenerRegistration? = nil
     
     var searchQueue = OperationQueue()
+    
+    var isBottomLoad: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,49 +104,74 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         return cell
     }
     
+    private func createLoadingFooter() -> UIView {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: postsTableView.frame.size.width, height: 50))
+        let hudLoading = UIActivityIndicatorView()
+        
+        footerView.addSubview(hudLoading)
+        hudLoading.center = footerView.center
+        hudLoading.startAnimating()
+        
+        return footerView
+    }
+    
     // MARK: - fetchData
     func fetchDataWithString(_ searchString: String) {
-        hud.textLabel.text = (searchString == "") ? "" : "Searching..."
-        hud.show(in: self.view)
-
+        // Create loading animation
+        if (isBottomLoad) {
+            self.postsTableView.tableFooterView = createLoadingFooter()
+        }
+        else {
+            hud.textLabel.text = (searchString == "") ? "" : "Searching..."
+            hud.show(in: self.view)
+        }
+        
         firestoreListener?.remove()
-        firestoreListener = db.collection("posts").order(by: "createdDate", descending: true).addSnapshotListener { (snapshot, error) in
-            if let error = error {
-                self.hud.dismiss()
-                Toast.show(message: error.localizedDescription, controller: self)
-            }
-            else {
-                self.postsList.removeAll()
-                for document in snapshot!.documents {
-                    let post = Post(document as DocumentSnapshot)
-                    if (post.isVerified! == true && ((searchString == "") ? true : ((post.title?.lowercased().contains(searchString.lowercased()))! ? true : false))) {
-                        self.postsList.append(post)
-                    }
-                    self.presentData()
-                }
-                self.hud.dismiss()
-                
-                // Check if postsList is empty
-                if self.postsList.count == 0 {
-                    UIView.animate(withDuration: 0.3,
-                                   delay: 0.1,
-                                   options: .curveEaseOut) {
-                        self.emptyPostLabel.alpha = 1
-                    } completion: { (value) in
-                        self.emptyPostLabel.isHidden = false
-                    }
+        firestoreListener = db.collection("posts")
+            .whereField("isVerified", isEqualTo: true)
+            .order(by: "createdDate", descending: true)
+            .limit(to: maxPostsFetched)
+            .addSnapshotListener { (snapshot, error) in
+                if let error = error {
+                    self.hud.dismiss()
+                    Toast.show(message: error.localizedDescription, controller: self)
                 }
                 else {
-                    UIView.animate(withDuration: 0.3,
-                                   delay: 0.1,
-                                   options: .curveEaseOut) {
-                        self.emptyPostLabel.alpha = 0
-                    } completion: { (value) in
-                        self.emptyPostLabel.isHidden = true
+                    self.postsList.removeAll()
+                    for document in snapshot!.documents {
+                        let post = Post(document as DocumentSnapshot)
+                        if (searchString == "" ? true : ((post.title?.lowercased().contains(searchString.lowercased()))! ? true : false)) {
+                            self.postsList.append(post)
+                        }
+                        self.presentData()
+                    }
+                    
+                    // Disable loading animation
+                    self.hud.dismiss()
+                    self.postsTableView.tableFooterView = nil
+                    self.isBottomLoad = false
+                    
+                    // Check if postsList is empty
+                    if self.postsList.count == 0 {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 1
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = false
+                        }
+                    }
+                    else {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 0
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = true
+                        }
                     }
                 }
             }
-        }
     }
 
     // MARK: - Post Cell Protocol
@@ -178,6 +206,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        maxPostsFetched = 10
         searchQueue.addOperation {
             Thread.sleep(forTimeInterval: 0.4)
             DispatchQueue.main.async { [weak self] in
@@ -200,6 +229,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        if (position > postsTableView.contentSize.height+100-scrollView.frame.size.height) {
+            print("Scroll at bottom...")
+            if (postsList.count == maxPostsFetched) {
+                maxPostsFetched += 5
+                isBottomLoad = true
+                fetchDataWithString("")
+            }
+        }
     }
     
 }

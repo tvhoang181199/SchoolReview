@@ -13,7 +13,7 @@ import FirebaseAuth
 import JGProgressHUD
 import SCLAlertView
 
-class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PostCellProtocol, CheckUserBlockedProtocol {
+class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, PostCellProtocol, CheckUserBlockedProtocol {
 
     @IBOutlet weak var myPostsTableView: UITableView!
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
@@ -28,6 +28,9 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //listener
     var firestoreListener: ListenerRegistration? = nil
+    
+    var maxPostsFetched: Int = 5
+    var isBottomLoad: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,15 +102,32 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    private func createLoadingFooter() -> UIView {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: myPostsTableView.frame.size.width, height: 50))
+        let hudLoading = UIActivityIndicatorView()
         
+        footerView.addSubview(hudLoading)
+        hudLoading.center = footerView.center
+        hudLoading.startAnimating()
+        
+        return footerView
     }
-    
     
     // MARK: - fetchData
     func fetchData() {
-        hud.show(in: self.view)
-        firestoreListener = db.collection("posts").whereField("userID", isEqualTo: currentUser.string(forKey: "userID")!).order(by: "createdDate", descending: true).addSnapshotListener() { (snapshot, error) in
+        // Create loading animation
+        if (isBottomLoad) {
+            self.myPostsTableView.tableFooterView = createLoadingFooter()
+        }
+        else {
+            hud.show(in: self.view)
+        }
+        
+        firestoreListener = db.collection("posts")
+            .whereField("userID", isEqualTo: currentUser.string(forKey: "userID")!)
+            .order(by: "createdDate", descending: true)
+            .limit(to: maxPostsFetched)
+            .addSnapshotListener() { (snapshot, error) in
             if let error = error {
                 self.hud.dismiss()
                 Toast.show(message: error.localizedDescription, controller: self)
@@ -120,7 +140,10 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.postsList.append(post)
                     self.presentData()
                 }
+                // Disable loading animation
                 self.hud.dismiss()
+                self.myPostsTableView.tableFooterView = nil
+                self.isBottomLoad = false
             }
         }
     }
@@ -167,6 +190,19 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
         }
         alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        if (position > myPostsTableView.contentSize.height+100-scrollView.frame.size.height) {
+            print("Scroll at bottom...")
+            if (postsList.count == maxPostsFetched) {
+                maxPostsFetched += 5
+                isBottomLoad = true
+                fetchData()
+            }
+        }
     }
     
 }

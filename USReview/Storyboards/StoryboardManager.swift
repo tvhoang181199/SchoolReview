@@ -14,8 +14,12 @@ extension UIStoryboard {
         return UIStoryboard(name: "Main", bundle: Bundle.main)
     }
     
+    class func mainTabBarStoryboard() -> UIStoryboard {
+        return UIStoryboard(name: "MainTabBar", bundle: Bundle.main)
+    }
+    
     class func mainTabBarController() -> MainTabBarController? {
-        return mainStoryboard().instantiateViewController(withIdentifier: "MainTabBarController") as? MainTabBarController
+        return mainTabBarStoryboard().instantiateViewController(withIdentifier: "MainTabBarController") as? MainTabBarController
     }
     
     class func loginNavigationController() -> UIViewController? {
@@ -31,11 +35,11 @@ extension UIStoryboard {
     }
     
     class func addPostViewController() -> AddPostViewController? {
-        return mainStoryboard().instantiateViewController(withIdentifier: "AddPostViewController") as? AddPostViewController
+        return mainTabBarStoryboard().instantiateViewController(withIdentifier: "AddPostViewController") as? AddPostViewController
     }
     
     class func myPostsViewController() -> MyPostsViewController? {
-        return mainStoryboard().instantiateViewController(withIdentifier: "MyPostsViewController") as? MyPostsViewController
+        return mainTabBarStoryboard().instantiateViewController(withIdentifier: "MyPostsViewController") as? MyPostsViewController
     }
     
 }

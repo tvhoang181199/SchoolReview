@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1743FB0E25AF760500062FB4 /* MainTabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1743FB0D25AF760500062FB4 /* MainTabBar.storyboard */; };
 		17983C7E25AE143800E73374 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17983C7C25AE143800E73374 /* PostTableViewCell.xib */; };
 		179B520425AD0509003F6725 /* MyPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B520325AD0509003F6725 /* MyPostsViewController.swift */; };
 		17ADC79225AB08B900EE003D /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ADC79125AB08B900EE003D /* MainTabBarController.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1743FB0D25AF760500062FB4 /* MainTabBar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainTabBar.storyboard; sourceTree = "<group>"; };
 		17983C7C25AE143800E73374 /* PostTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
 		179B520325AD0509003F6725 /* MyPostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostsViewController.swift; sourceTree = "<group>"; };
 		17ADC79125AB08B900EE003D /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			children = (
 				17DAD27025A0EED6001C6AE0 /* StoryboardManager.swift */,
 				17DAD20D259F33D9001C6AE0 /* Main.storyboard */,
+				1743FB0D25AF760500062FB4 /* MainTabBar.storyboard */,
 				17DAD212259F33E3001C6AE0 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
@@ -260,6 +263,7 @@
 				17DAD214259F33E3001C6AE0 /* LaunchScreen.storyboard in Resources */,
 				17983C7E25AE143800E73374 /* PostTableViewCell.xib in Resources */,
 				17DAD21D259F34AB001C6AE0 /* GoogleService-Info.plist in Resources */,
+				1743FB0E25AF760500062FB4 /* MainTabBar.storyboard in Resources */,
 				17DAD211259F33E3001C6AE0 /* Assets.xcassets in Resources */,
 				17DAD20F259F33D9001C6AE0 /* Main.storyboard in Resources */,
 			);

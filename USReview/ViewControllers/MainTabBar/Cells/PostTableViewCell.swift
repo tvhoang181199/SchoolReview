@@ -128,10 +128,11 @@ class PostTableViewCell: UITableViewCell {
         commentsStackView.removeAllArrangedSubviews()
         for i in 0..<(post.comments?.count ?? 0) {
             // Comments exists
-            commentTextFieldTopConstraint.constant = 0
+            commentTextFieldTopConstraint.constant = 10
             
             // Create comment row
             let container = UIView()
+            let nameAndContentBox = UIView()
             let commentImageView = UIImageView()
             let commentUserNameLabel = UILabel()
             let commentContentLabel = UILabel()
@@ -139,12 +140,16 @@ class PostTableViewCell: UITableViewCell {
             
             // Add to container
             container.addSubview(commentImageView)
-            container.addSubview(commentUserNameLabel)
-            container.addSubview(commentContentLabel)
+            container.addSubview(nameAndContentBox)
             container.addSubview(deleteCommentButton)
+            
+            // Add user name and content labels in to box
+            nameAndContentBox.addSubview(commentUserNameLabel)
+            nameAndContentBox.addSubview(commentContentLabel)
             
             // Auto layout
             container.translatesAutoresizingMaskIntoConstraints = false
+            nameAndContentBox.translatesAutoresizingMaskIntoConstraints = false
             commentImageView.translatesAutoresizingMaskIntoConstraints = false
             commentUserNameLabel.translatesAutoresizingMaskIntoConstraints = false
             commentContentLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -153,28 +158,41 @@ class PostTableViewCell: UITableViewCell {
             container.widthAnchor.constraint(equalToConstant: commentsStackView.superview!.bounds.size.width).isActive = true
             container.heightAnchor.constraint(greaterThanOrEqualToConstant: 55).isActive = true
             
-            deleteCommentButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
-            deleteCommentButton.heightAnchor.constraint(equalToConstant: 12).isActive = true
-            deleteCommentButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
-            deleteCommentButton.topAnchor.constraint(equalTo: commentContentLabel.topAnchor, constant: 2).isActive = true
-            
-            commentImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 10).isActive = true
+            commentImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 15).isActive = true
             commentImageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 15).isActive = true
             commentImageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
             commentImageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
             
-            commentUserNameLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentUserNameLabel.trailingAnchor.constraint(equalTo: deleteCommentButton.leadingAnchor, constant: -5).isActive = true
-            commentUserNameLabel.topAnchor.constraint(equalTo: commentImageView.topAnchor, constant: 3).isActive = true
+            nameAndContentBox.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 10).isActive = true
+            nameAndContentBox.trailingAnchor.constraint(equalTo: deleteCommentButton.leadingAnchor, constant: -5).isActive = true
+            nameAndContentBox.topAnchor.constraint(equalTo: commentImageView.topAnchor, constant: 0).isActive = true
+            nameAndContentBox.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -5).isActive = true
             
-            commentContentLabel.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 5).isActive = true
-            commentContentLabel.trailingAnchor.constraint(equalTo: deleteCommentButton.leadingAnchor, constant: -5).isActive = true
-            commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 0).isActive = true
-            commentContentLabel.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -10).isActive = true
+            commentUserNameLabel.leadingAnchor.constraint(equalTo: nameAndContentBox.leadingAnchor, constant: 10).isActive = true
+            commentUserNameLabel.trailingAnchor.constraint(equalTo: nameAndContentBox.trailingAnchor, constant: -5).isActive = true
+            commentUserNameLabel.topAnchor.constraint(equalTo: nameAndContentBox.topAnchor, constant: 5).isActive = true
+            
+            commentContentLabel.leadingAnchor.constraint(equalTo: nameAndContentBox.leadingAnchor, constant: 10).isActive = true
+            commentContentLabel.trailingAnchor.constraint(equalTo: nameAndContentBox.trailingAnchor, constant: -5).isActive = true
+            commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 2).isActive = true
+            commentContentLabel.bottomAnchor.constraint(lessThanOrEqualTo: nameAndContentBox.bottomAnchor, constant: -10).isActive = true
+            
+            deleteCommentButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            deleteCommentButton.heightAnchor.constraint(equalToConstant: 12).isActive = true
+            deleteCommentButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+            deleteCommentButton.centerYAnchor.constraint(equalTo: nameAndContentBox.centerYAnchor, constant: 0).isActive = true
             
             // Set data
+
+            nameAndContentBox.backgroundColor = UIColor.init(red: 42/255, green: 51/255, blue: 66/255, alpha: 1)
+            nameAndContentBox.layer.cornerRadius = 5
+            
             commentImageView.contentMode = .scaleAspectFit
-            commentImageView.layer.cornerRadius = commentImageView.bounds.size.width/2
+            commentImageView.layer.cornerRadius = 17.5
+            commentImageView.layer.borderWidth = 1
+            commentImageView.layer.borderColor = UIColor.systemGray4.cgColor
+            commentImageView.clipsToBounds = true
+            
             switch post.comments![i]["schoolID"] as? String {
             case "S000":
                 commentImageView.image = UIImage(named: "HCMUS_avatar")
@@ -191,11 +209,13 @@ class PostTableViewCell: UITableViewCell {
             commentUserNameLabel.numberOfLines = 1
             commentUserNameLabel.font = UIFont(name: "GillSans-Bold", size: 15)
             commentUserNameLabel.text = post.comments![i]["userName"] as? String
+            commentUserNameLabel.textColor = .white
             
             commentContentLabel.numberOfLines = 0
             commentContentLabel.lineBreakMode = .byWordWrapping
             commentContentLabel.font = UIFont(name: "GillSans", size: 14)
             commentContentLabel.text = post.comments![i]["content"] as? String
+            commentContentLabel.textColor = .white
             
             if (post.comments![i]["userID"] as? String == currentUser.string(forKey: "userID")) {
                 deleteCommentButton.isHidden = false
@@ -222,7 +242,6 @@ class PostTableViewCell: UITableViewCell {
 
     @IBAction func starButtonTapped(_ sender: Any) {
         if (likeButton.isSelected == false) {
-            likeButton.isEnabled = false
             db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":[
                                                                                 currentUser.string(forKey: "userID"):true],
                                                                              "likes": ((postData?.likes)!+1)
@@ -230,22 +249,16 @@ class PostTableViewCell: UITableViewCell {
                 if let error = error {
                     self.delegate.callBackError(error)
                 }
-                else {
-                    self.likeButton.isEnabled = true
-                }
             }
         }
         else if (likeButton.isSelected == true) {
-            likeButton.isEnabled = false
+//            likeButton.isEnabled = false
             db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":[
                                                                                 currentUser.string(forKey: "userID"):false],
                                                                              "likes": ((postData?.likes)!-1)
             ]) { (error) in
                 if let error = error {
                     self.delegate.callBackError(error)
-                }
-                else {
-                    self.likeButton.isEnabled = true
                 }
             }
         }

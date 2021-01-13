@@ -138,13 +138,18 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
     @IBAction func closeButtonTapped(_ sender: Any) {
         titleTextField.resignFirstResponder()
         contentTextView.resignFirstResponder()
-        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
-        alertView.addButton("Yes") {
+        if (titleTextField.text == "" && contentTextView.textColor == UIColor.systemGray4 && contentTextView.text == "Content") {
             self.dismiss(animated: true, completion: nil)
         }
-        alertView.addButton("No") {
+        else {
+            let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+            alertView.addButton("Yes") {
+                self.dismiss(animated: true, completion: nil)
+            }
+            alertView.addButton("No") {
+            }
+            alertView.showWarning("Warning", subTitle: "Your post has not been saved. Are you sure?")
         }
-        alertView.showWarning("Warning", subTitle: "Your post has not been saved. Are you sure?")
     }
     
     // MARK: - textView Protocols
