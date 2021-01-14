@@ -64,9 +64,13 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             keyboardHeight = keyboardSize.height
         }
+        contentViewBottom.constant = 15 + keyboardHeight
+        containerHeight.constant = safeViewHeight - 50 + keyboardHeight
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        contentViewBottom.constant = 15
+        containerHeight.constant = safeViewHeight - 50
     }
     
     // MARK: - UIButton actions
@@ -157,18 +161,18 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
         if (textView.textColor == UIColor.systemGray4) {
             textView.text = ""
             textView.textColor = UIColor.black
+            textView.tintColor = UIColor.init(red: 42/255, green: 51/255, blue: 66/255, alpha: 1)
         }
-        contentViewBottom.constant = 15 + keyboardHeight
-        containerHeight.constant = safeViewHeight - 50 + keyboardHeight
+
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if (textView.text == "") {
             textView.text = "Content"
             textView.textColor = UIColor.systemGray4
+            textView.tintColor = UIColor.init(red: 42/255, green: 51/255, blue: 66/255, alpha: 1)
         }
-        contentViewBottom.constant = 15
-        containerHeight.constant = safeViewHeight - 50
+
     }
     
     // MARK: - Check User Blocked Protocol

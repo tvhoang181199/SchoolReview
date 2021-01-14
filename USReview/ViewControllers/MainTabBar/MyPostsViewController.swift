@@ -30,11 +30,18 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var firestoreListener: ListenerRegistration? = nil
     
     var maxPostsFetched: Int = 5
+    
+    // For loading
     var isBottomLoad: Bool = false
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        refreshControl.tintColor = UIColor.lightGray
+        refreshControl.addTarget(self, action: #selector(refetchData), for: .valueChanged)
+        myPostsTableView.addSubview(refreshControl)
+        
         myPostsTableView.delegate = self
         myPostsTableView.dataSource = self
         myPostsTableView.register(UINib(nibName: "PostTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "PostTableViewCell")
@@ -134,11 +141,14 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             else {
                 print("Fetched My Posts Data: \(snapshot?.description ?? "")")
-                self.postsList.removeAll()
-                for document in snapshot!.documents {
-                    let post = Post(document as DocumentSnapshot)
-                    self.postsList.append(post)
-                    self.presentData()
+                if ((self.postsList.count < (snapshot?.documents.count)! && self.isBottomLoad == true) ||
+                        self.isBottomLoad == false) {
+                    self.postsList.removeAll()
+                    for document in snapshot!.documents {
+                        let post = Post(document as DocumentSnapshot)
+                        self.postsList.append(post)
+                        self.presentData()
+                    }
                 }
                 // Disable loading animation
                 self.hud.dismiss()
@@ -146,6 +156,33 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self.isBottomLoad = false
             }
         }
+    }
+    
+    @objc func refetchData() {
+        maxPostsFetched = 5
+        
+        firestoreListener?.remove()
+        firestoreListener = db.collection("posts")
+            .whereField("isVerified", isEqualTo: true)
+            .order(by: "createdDate", descending: true)
+            .limit(to: maxPostsFetched)
+            .addSnapshotListener { (snapshot, error) in
+                if let error = error {
+                    self.hud.dismiss()
+                    Toast.show(message: error.localizedDescription, controller: self)
+                }
+                else {
+                    self.postsList.removeAll()
+                    for document in snapshot!.documents {
+                        let post = Post(document as DocumentSnapshot)
+                        self.postsList.append(post)
+                        self.presentData()
+                    }
+                    
+                    // Disable loading animation
+                    self.refreshControl.endRefreshing()
+                }
+            }
     }
     
     // MARK: - Post Cell Protocol
@@ -175,7 +212,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         alertView.addButton("No") {
         }
-        alertView.showWarning("Warning", subTitle: "Do you want to delete you comment?")
+        alertView.showWarning("Warning", subTitle: "Do you want to delete this comment?")
     }
     
     // MARK: - Check User Blocked Protocol
@@ -197,11 +234,11 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let position = scrollView.contentOffset.y
         if (position > myPostsTableView.contentSize.height+100-scrollView.frame.size.height) {
             print("Scroll at bottom...")
+            isBottomLoad = true
             if (postsList.count == maxPostsFetched) {
                 maxPostsFetched += 5
-                isBottomLoad = true
-                fetchData()
             }
+            fetchData()
         }
     }
     

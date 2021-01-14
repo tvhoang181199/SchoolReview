@@ -33,7 +33,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var searchQueue = OperationQueue()
     
+    // For loading
     var isBottomLoad: Bool = false
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +47,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         postsSearchBar.delegate = self
         
         // Setup tableview
+        refreshControl.tintColor = UIColor.lightGray
+        refreshControl.addTarget(self, action: #selector(refetchData), for: .valueChanged)
+        postsTableView.addSubview(refreshControl)
+        
         postsTableView.delegate = self
         postsTableView.dataSource = self
         postsTableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: "PostTableViewCell")
@@ -137,15 +143,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     Toast.show(message: error.localizedDescription, controller: self)
                 }
                 else {
-                    self.postsList.removeAll()
-                    for document in snapshot!.documents {
-                        let post = Post(document as DocumentSnapshot)
-                        if (searchString == "" ? true : ((post.title?.lowercased().contains(searchString.lowercased()))! ? true : false)) {
-                            self.postsList.append(post)
+                    if ((self.postsList.count < (snapshot?.documents.count)! && self.isBottomLoad == true) ||
+                            self.isBottomLoad == false) {
+                        self.postsList.removeAll()
+                        for document in snapshot!.documents {
+                            let post = Post(document as DocumentSnapshot)
+                            if (searchString == "" ? true : ((post.title?.lowercased().contains(searchString.lowercased()))! ? true : false)) {
+                                self.postsList.append(post)
+                            }
+                            self.presentData()
                         }
-                        self.presentData()
                     }
-                    
                     // Disable loading animation
                     self.hud.dismiss()
                     self.postsTableView.tableFooterView = nil
@@ -170,6 +178,33 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                             self.emptyPostLabel.isHidden = true
                         }
                     }
+                }
+            }
+    }
+    
+    @objc func refetchData() {
+        maxPostsFetched = 5
+        
+        firestoreListener?.remove()
+        firestoreListener = db.collection("posts")
+            .whereField("isVerified", isEqualTo: true)
+            .order(by: "createdDate", descending: true)
+            .limit(to: maxPostsFetched)
+            .addSnapshotListener { (snapshot, error) in
+                if let error = error {
+                    self.hud.dismiss()
+                    Toast.show(message: error.localizedDescription, controller: self)
+                }
+                else {
+                    self.postsList.removeAll()
+                    for document in snapshot!.documents {
+                        let post = Post(document as DocumentSnapshot)
+                        self.postsList.append(post)
+                        self.presentData()
+                    }
+                    
+                    // Disable loading animation
+                    self.refreshControl.endRefreshing()
                 }
             }
     }
@@ -201,12 +236,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         alertView.addButton("No") {
         }
-        alertView.showWarning("Warning", subTitle: "Do you want to delete you comment?")
+        alertView.showWarning("Warning", subTitle: "Do you want to delete this comment?")
     }
     
     // MARK: - UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        maxPostsFetched = 10
+        maxPostsFetched = 5
         searchQueue.addOperation {
             Thread.sleep(forTimeInterval: 0.4)
             DispatchQueue.main.async { [weak self] in
@@ -236,11 +271,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let position = scrollView.contentOffset.y
         if (position > postsTableView.contentSize.height+100-scrollView.frame.size.height) {
             print("Scroll at bottom...")
+            isBottomLoad = true
             if (postsList.count == maxPostsFetched) {
                 maxPostsFetched += 5
-                isBottomLoad = true
-                fetchDataWithString("")
             }
+            fetchDataWithString("")
         }
     }
     

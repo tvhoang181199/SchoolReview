@@ -71,14 +71,15 @@ class MainTabBarController: UITabBarController {
             else {
                 print("Check account blocked listener is in background...")
                 if ((snapshot?.data()!["isBlocked"] as? Bool) == true) {
+                    if let appDomain = Bundle.main.bundleIdentifier {
+                        self.currentUser.removePersistentDomain(forName: appDomain)
+                        try! Auth.auth().signOut()
+                    }
+                    
                     let topMostVC = UIApplication.getTopMostViewController()!
                     if (topMostVC == self) {
                         let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
                         alertView.addButton("OK") {
-                            if let appDomain = Bundle.main.bundleIdentifier {
-                                self.currentUser.removePersistentDomain(forName: appDomain)
-                            }
-                            try! Auth.auth().signOut()
                             let loginNavigationController = UIStoryboard.loginNavigationController()
                             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
                         }

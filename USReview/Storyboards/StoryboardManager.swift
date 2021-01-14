@@ -18,16 +18,16 @@ extension UIStoryboard {
         return UIStoryboard(name: "MainTabBar", bundle: Bundle.main)
     }
     
-    class func mainTabBarController() -> MainTabBarController? {
-        return mainTabBarStoryboard().instantiateViewController(withIdentifier: "MainTabBarController") as? MainTabBarController
-    }
-    
     class func loginNavigationController() -> UIViewController? {
         return mainStoryboard().instantiateViewController(withIdentifier: "LoginNavigationController")
     }
     
     class func loginViewController() -> LoginViewController? {
         return mainStoryboard().instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController
+    }
+    
+    class func mainTabBarController() -> MainTabBarController? {
+        return mainTabBarStoryboard().instantiateViewController(withIdentifier: "MainTabBarController") as? MainTabBarController
     }
     
     class func signUpViewController() -> SignUpViewController? {

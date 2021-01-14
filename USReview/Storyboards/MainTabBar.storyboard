@@ -11,7 +11,6 @@
         <!--Profile-->
         <scene sceneID="a5r-ZZ-qiu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ezc-O9-vaJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="ProfileViewController" id="U6J-Jw-ZuV" customClass="ProfileViewController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ugX-Oo-EdG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -210,13 +209,13 @@
                         <outlet property="verifiedAccountButton" destination="AO3-qD-Hog" id="tRL-Dd-8pr"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ezc-O9-vaJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4342" y="799"/>
         </scene>
         <!--Home-->
         <scene sceneID="qej-wr-duG">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="nP9-ja-HJ2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="HomeViewController" id="7ZC-vW-SHU" customClass="HomeViewController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7u7-Cf-A0d">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -230,6 +229,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="56" id="vpG-No-x3p"/>
                                         </constraints>
+                                        <color key="tintColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="search"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
@@ -298,13 +298,13 @@
                         <outlet property="postsTableView" destination="3lV-om-bwj" id="t8z-P0-rFi"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nP9-ja-HJ2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4342.0289855072469" y="64.955357142857139"/>
         </scene>
         <!--Add Post View Controller-->
         <scene sceneID="zad-Xo-ko0">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tMD-A7-Q0F" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="AddPostViewController" id="2ws-bn-MQ1" customClass="AddPostViewController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RjK-UG-6Hj">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -345,6 +345,7 @@
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Title" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="pHO-RS-WIP">
                                                         <rect key="frame" x="15" y="15" width="354" height="40"/>
+                                                        <color key="tintColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="MEW-U9-vZN"/>
                                                         </constraints>
@@ -377,6 +378,7 @@
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" text="Content" translatesAutoresizingMaskIntoConstraints="NO" id="qxZ-vX-kVc">
                                                         <rect key="frame" x="15" y="65" width="354" height="598"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <color key="tintColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <color key="textColor" systemColor="labelColor"/>
                                                         <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -482,13 +484,13 @@
                         <outlet property="titleTextField" destination="pHO-RS-WIP" id="iRs-hN-XHC"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tMD-A7-Q0F" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4342" y="-670"/>
         </scene>
         <!--My Posts View Controller-->
         <scene sceneID="VUh-Fk-mJn">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="U8N-qC-03K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MyPostsViewController" id="spy-1b-bRo" customClass="MyPostsViewController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Pl2-cb-49i">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -558,13 +560,13 @@
                         <outlet property="myPostsTableView" destination="Ri1-eF-oAq" id="5Ze-0H-Q8q"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="U8N-qC-03K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5362" y="799"/>
         </scene>
         <!--Main Tab Bar Controller-->
         <scene sceneID="wll-vy-h8Y">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="flm-J6-1Qf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tabBarController storyboardIdentifier="MainTabBarController" id="OPA-C0-6nc" customClass="MainTabBarController" customModule="USReview" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="flK-Z0-GHf" customClass="AppTabBar" customModule="USReview">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
@@ -578,6 +580,7 @@
                         <segue destination="U6J-Jw-ZuV" kind="relationship" relationship="viewControllers" id="lPM-3a-riW"/>
                     </connections>
                 </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="flm-J6-1Qf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3158" y="65"/>
         </scene>

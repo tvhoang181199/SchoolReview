@@ -164,7 +164,7 @@ class PostTableViewCell: UITableViewCell {
             commentImageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
             
             nameAndContentBox.leadingAnchor.constraint(equalTo: commentImageView.trailingAnchor, constant: 10).isActive = true
-            nameAndContentBox.trailingAnchor.constraint(equalTo: deleteCommentButton.leadingAnchor, constant: -5).isActive = true
+            nameAndContentBox.trailingAnchor.constraint(equalTo: deleteCommentButton.leadingAnchor, constant: -10).isActive = true
             nameAndContentBox.topAnchor.constraint(equalTo: commentImageView.topAnchor, constant: 0).isActive = true
             nameAndContentBox.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -5).isActive = true
             
@@ -177,8 +177,8 @@ class PostTableViewCell: UITableViewCell {
             commentContentLabel.topAnchor.constraint(equalTo: commentUserNameLabel.bottomAnchor, constant: 2).isActive = true
             commentContentLabel.bottomAnchor.constraint(lessThanOrEqualTo: nameAndContentBox.bottomAnchor, constant: -10).isActive = true
             
-            deleteCommentButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
-            deleteCommentButton.heightAnchor.constraint(equalToConstant: 12).isActive = true
+            deleteCommentButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+            deleteCommentButton.heightAnchor.constraint(equalToConstant: 15).isActive = true
             deleteCommentButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
             deleteCommentButton.centerYAnchor.constraint(equalTo: nameAndContentBox.centerYAnchor, constant: 0).isActive = true
             
@@ -217,15 +217,22 @@ class PostTableViewCell: UITableViewCell {
             commentContentLabel.text = post.comments![i]["content"] as? String
             commentContentLabel.textColor = .white
             
-            if (post.comments![i]["userID"] as? String == currentUser.string(forKey: "userID")) {
+            if (post.userID == currentUser.string(forKey: "userID")) {
                 deleteCommentButton.isHidden = false
             }
             else {
-                deleteCommentButton.isHidden = true
+                if (post.comments![i]["userID"] as? String == currentUser.string(forKey: "userID")) {
+                    deleteCommentButton.isHidden = false
+                }
+                else {
+                    deleteCommentButton.isHidden = true
+                }
+                
             }
             deleteCommentButton.tag = i
-            deleteCommentButton.setTitle("Delete", for: .normal)
-            deleteCommentButton.setTitleColor(.red, for: .normal)
+            deleteCommentButton.setImage(UIImage(systemName: "trash"), for: .normal)
+            deleteCommentButton.imageView?.contentMode = .scaleAspectFit
+            deleteCommentButton.tintColor = .red
             deleteCommentButton.titleLabel?.font = UIFont(name: "GillSans", size: 10)
             deleteCommentButton.addTarget(self, action: #selector(deleteCommentButtonTapped), for: .touchUpInside)
             
@@ -252,7 +259,6 @@ class PostTableViewCell: UITableViewCell {
             }
         }
         else if (likeButton.isSelected == true) {
-//            likeButton.isEnabled = false
             db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":[
                                                                                 currentUser.string(forKey: "userID"):false],
                                                                              "likes": ((postData?.likes)!-1)
