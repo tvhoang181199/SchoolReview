@@ -67,6 +67,15 @@ function Table({ columns, data, blockUser, verifyUser }) {
           </div>
         );
 
+      case "approvepost":
+        return (
+          <div className={classes.actions}>
+            <Button onClick={() => onVerifyUser(value)} variant="contained" size="small" color="primary">
+              Aprrove
+            </Button>
+          </div>
+        );
+
       default:
         return (
           <div className={classes.actions}>
@@ -156,6 +165,9 @@ const useStyles = makeStyles({
     },
     "& > td": {
       paddingLeft: 10,
+      maxWidth: 200,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
     },
   },
   header: {
