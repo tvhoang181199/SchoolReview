@@ -248,6 +248,8 @@ class PostTableViewCell: UITableViewCell {
     // MARK: - Button actions
 
     @IBAction func starButtonTapped(_ sender: Any) {
+        
+        
         if (likeButton.isSelected == false) {
             db.collection("posts").document((postData?.postID)!).updateData(["likedUsers":FieldValue.arrayUnion([currentUser.string(forKey: "userID")!]),
                                                                              "likes": ((postData?.likes)!+1)

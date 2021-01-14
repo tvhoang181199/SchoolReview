@@ -20,9 +20,12 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var contentTextView: UITextView!
     @IBOutlet weak var postButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
     
-    @IBOutlet weak var containerHeight: NSLayoutConstraint!
-    @IBOutlet weak var contentViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var containerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var deleteButtonBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var deleteButtonHeightConstraint: NSLayoutConstraint!
     
     var layoutGuide = UILayoutGuide()
     var safeViewHeight: CGFloat = 0
@@ -42,15 +45,21 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
         
         if (titleString != nil) {
             titleLabel.text = titleString
-            postButton.setTitle("Update", for: .normal)
-            contentTextView.textColor = UIColor.black
             titleTextField.text = postData?.title
+            contentTextView.textColor = UIColor.black
             contentTextView.text = postData?.content
+            postButton.setTitle("Update", for: .normal)
+            deleteButton.isHidden = false
+            deleteButtonHeightConstraint.constant = 50
+            deleteButtonBottomConstraint.constant = 15
         }
         else {
             contentTextView.delegate = self
             contentTextView.text = "Content"
             contentTextView.textColor = UIColor.systemGray4
+            deleteButton.isHidden = true
+            deleteButtonHeightConstraint.constant = 0
+            deleteButtonBottomConstraint.constant = 5
         }
         
         layoutGuide = view.safeAreaLayoutGuide
@@ -64,17 +73,19 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             keyboardHeight = keyboardSize.height
         }
-        contentViewBottom.constant = 15 + keyboardHeight
-        containerHeight.constant = safeViewHeight - 50 + keyboardHeight
+        contentViewBottomConstraint.constant = 15 + keyboardHeight
+        containerHeightConstraint.constant = safeViewHeight - 50 + keyboardHeight
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
-        contentViewBottom.constant = 15
-        containerHeight.constant = safeViewHeight - 50
+        contentViewBottomConstraint.constant = 15
+        containerHeightConstraint.constant = safeViewHeight - 50
     }
     
     // MARK: - UIButton actions
     @IBAction func postButtonTapped(_ sender: Any) {
+        titleTextField.resignFirstResponder()
+        contentTextView.resignFirstResponder()
         if (titleTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
                 (contentTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "Content" &&
                     contentTextView.textColor == UIColor.systemGray4)) {
@@ -137,6 +148,34 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
                 }
             }
         }
+    }
+    
+    @IBAction func deleteButtonTapped(_ sender: Any) {
+        titleTextField.resignFirstResponder()
+        contentTextView.resignFirstResponder()
+
+        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+        alertView.addButton("Yes") {
+            self.hud.textLabel.text = "Deleting..."
+            self.hud.show(in: self.view)
+            
+            self.db.collection("posts").document((self.postData?.postID)!).delete { (error) in
+                if let error = error {
+                    self.hud.dismiss()
+                    Toast.show(message: error.localizedDescription, controller: self)
+                }
+                else {
+                    self.hud.dismiss()
+                    self.presentingViewController?.dismiss(animated: true, completion: {
+                        let vc = UIApplication.getTopMostViewController()!
+                        Toast.show(message: "Your post has been deleted", controller: vc)
+                    })
+                }
+            }
+        }
+        alertView.addButton("No") {
+        }
+        alertView.showWarning("Warning", subTitle: "Your post will be deleted permanently. Are you sure?")
     }
     
     @IBAction func closeButtonTapped(_ sender: Any) {
