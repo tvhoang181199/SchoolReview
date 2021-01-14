@@ -10,6 +10,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { userApi } from "../../services";
 import actions from "../../redux/app/actions";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +50,7 @@ function Posts(props) {
       const blocked = post.isBlocked ? "True" : "False";
       const actions = post.postID;
       const tableType = "posts";
-      const date = moment(post.createdDate).format("DD-MM-YYYY hh:mm:ss");
+      const date = moment(post.createdDate.seconds).format("DD-MM-YYYY hh:mm:ss");
       return { stt, title, author, comments, likes, verified, date, blocked, actions, tableType };
     });
   };
@@ -105,7 +106,7 @@ function Posts(props) {
           </Typography>
         </Link>
         <Typography variant="body1" color="textPrimary" className={classes.link}>
-          <PeopleAlt className={classes.icon} />
+          <AssignmentTurnedInIcon className={classes.icon} />
           Posts
         </Typography>
       </Breadcrumbs>

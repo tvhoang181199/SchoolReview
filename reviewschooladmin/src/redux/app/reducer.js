@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   usersList: [],
   postsList: [],
   verifyUsers: [],
-  approvePost: [],
+  approvePosts: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -38,6 +38,14 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         usersList: state.usersList.map((user) => (user.email === action.payload ? { ...user, isVerified: 2 } : user)),
         verifyUsers: state.verifyUsers.filter((user) => user.email !== action.payload),
+      };
+    case types.APPROVE_POST:
+      return {
+        ...state,
+        postsList: state.postsList.map((post) =>
+          post.postID === action.payload ? { ...post, isVerified: true } : post
+        ),
+        approvePosts: state.approvePosts.filter((post) => post.postID !== action.payload),
       };
     default:
       return state;

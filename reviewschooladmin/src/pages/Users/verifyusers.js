@@ -9,6 +9,7 @@ import queryString from "query-string";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "../../redux/app/actions";
 import { userApi } from "../../services";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -114,8 +115,8 @@ function VerifyUsers(props) {
           </Typography>
         </Link>
         <Typography variant="body1" color="textPrimary" className={classes.link}>
-          <PeopleAlt className={classes.icon} />
-          Users
+          <PersonAddIcon className={classes.icon} />
+          Verify Users
         </Typography>
       </Breadcrumbs>
       <div className={classes.container}>

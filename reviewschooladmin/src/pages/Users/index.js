@@ -120,13 +120,13 @@ function Users(props) {
         </Typography>
       </Breadcrumbs>
       <div className={classes.container}>
-        <Grid container justify="flex-end" style={{ marginBottom: "10px" }}>
+        {/* <Grid container justify="flex-end" style={{ marginBottom: "10px" }}>
           <Grid item>
             <Button color="primary" variant="contained" startIcon={<AddIcon />}>
               Add new user
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Table columns={columns} data={data} blockUser={handleBlockUser} />
       </div>
     </div>

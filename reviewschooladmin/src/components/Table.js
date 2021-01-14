@@ -5,12 +5,16 @@ import { TablePagination, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import ConfirmModal from "./ConfirmModal";
+import ApprovePosts from "../pages/Posts/ApprovePosts";
 
-function Table({ columns, data, blockUser, verifyUser }) {
+function Table({ columns, data, blockUser, verifyUser, approvePosts }) {
   const classes = useStyles();
   const history = useHistory();
   const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState("");
   const [userId, setUserId] = useState("");
+  const [postId, setPostId] = useState("");
   const {
     getTableProps,
     getTableBodyProps,
@@ -41,19 +45,41 @@ function Table({ columns, data, blockUser, verifyUser }) {
 
   const onBlockUser = (userId) => {
     setUserId(userId);
+    setMessage("Do you want to block this user ?");
+    setType("blockuser");
+    setOpen(true);
+  };
+
+  const onApprovePost = (postId) => {
+    setPostId(postId);
+    setMessage("Do you want to approve this post ?");
+    setType("approvepost");
+    setOpen(true);
+  };
+
+  const onVerifyUser = (userID) => {
+    setUserId(userID);
+    setMessage("Do you want to verify this user ?");
+    setType("verifyuser");
     setOpen(true);
   };
 
   const handleBlockUser = () => {
-    // blockUser(userId, secret, token);
     console.log("BLOCK: ", userId);
     blockUser(userId);
     setOpen(false);
   };
 
-  const onVerifyUser = (userID) => {
-    console.log("VERIFY: ", userID);
-    verifyUser(userID);
+  const handleVerifyUser = () => {
+    console.log("VERIFY: ", userId);
+    verifyUser(userId);
+    setOpen(false);
+  };
+
+  const handleApprovePost = () => {
+    console.log("APRROVE: ", postId);
+    approvePosts(postId);
+    setOpen(false);
   };
 
   const getActions = (status, value) => {
@@ -70,8 +96,17 @@ function Table({ columns, data, blockUser, verifyUser }) {
       case "approvepost":
         return (
           <div className={classes.actions}>
-            <Button onClick={() => onVerifyUser(value)} variant="contained" size="small" color="primary">
+            <Button onClick={() => onApprovePost(value)} variant="contained" size="small" color="primary">
               Aprrove
+            </Button>
+          </div>
+        );
+
+      case "posts":
+        return (
+          <div className={classes.actions}>
+            <Button variant="contained" size="small" color="primary">
+              View
             </Button>
           </div>
         );
@@ -87,23 +122,36 @@ function Table({ columns, data, blockUser, verifyUser }) {
               variant="contained"
               size="small"
               color="secondary"
-              disabled={status.blocked == "True"}
+              disabled={status.blocked === "True"}
             >
-              {status.blocked == "False" ? "Block" : "Blocked"}
+              {status.blocked === "False" ? "Block" : "Blocked"}
             </Button>
           </div>
         );
     }
   };
 
+  const handleDisagree = () => setOpen(false);
+
+  const handleAgree = () => {
+    switch (type) {
+      case "blockuser":
+        handleBlockUser();
+        return;
+      case "verifyuser":
+        handleVerifyUser();
+        return;
+      case "approvepost":
+        handleApprovePost();
+        return;
+      default:
+        return;
+    }
+  };
+
   return (
     <>
-      <ConfirmModal
-        title="Do you want to block this user ?"
-        open={open}
-        onAgree={handleBlockUser}
-        onDisagree={() => setOpen(false)}
-      />
+      <ConfirmModal title={message} open={open} onAgree={handleAgree} onDisagree={handleDisagree} />
       <table {...getTableProps()} className={classes.root}>
         <thead>
           {headerGroups.map((headerGroup) => (
