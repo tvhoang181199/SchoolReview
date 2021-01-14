@@ -27,6 +27,8 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("USER ID: ---- \(currentUser.string(forKey: "userID")!)")
+        
         setupCenterButton()
         
         backgroundCheckAccountStatus()
