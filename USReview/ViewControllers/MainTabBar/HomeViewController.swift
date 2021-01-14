@@ -31,14 +31,20 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // Listener
     var firestoreListener: ListenerRegistration? = nil
     
+    // Search
     var searchQueue = OperationQueue()
     
     // For loading
     var isBottomLoad: Bool = false
     private let refreshControl = UIRefreshControl()
     
+    var safeAreaBottomInset: CGFloat = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let window = UIApplication.shared.windows[0]
+        safeAreaBottomInset = window.safeAreaInsets.bottom
         
         emptyPostLabel.alpha = 1
         emptyPostLabel.isHidden = true
@@ -65,7 +71,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height
-            containerBottomConstraint.constant = keyboardHeight - 49
+            containerBottomConstraint.constant = keyboardHeight - 49 - safeAreaBottomInset
         }
     }
     
@@ -111,7 +117,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     private func createLoadingFooter() -> UIView {
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: postsTableView.frame.size.width, height: 50))
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: postsTableView.frame.size.width, height: 60))
         let hudLoading = UIActivityIndicatorView()
         
         footerView.addSubview(hudLoading)
@@ -124,10 +130,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - fetchData
     func fetchDataWithString(_ searchString: String) {
         // Create loading animation
-        if (isBottomLoad) {
-            self.postsTableView.tableFooterView = createLoadingFooter()
-        }
-        else {
+        if (!isBottomLoad) {
             hud.textLabel.text = (searchString == "") ? "" : "Searching..."
             hud.show(in: self.view)
         }
@@ -156,8 +159,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     // Disable loading animation
                     self.hud.dismiss()
-                    self.postsTableView.tableFooterView = nil
-                    self.isBottomLoad = false
+                    if (self.isBottomLoad) {
+                        self.postsTableView.tableFooterView = nil
+                        self.isBottomLoad = false
+                        self.postsTableView.reloadData()
+                    }
                     
                     // Check if postsList is empty
                     if self.postsList.count == 0 {
@@ -204,7 +210,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     
                     // Disable loading animation
-                    self.refreshControl.endRefreshing()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.refreshControl.endRefreshing()
+                    }
                 }
             }
     }
@@ -270,11 +278,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
         if (position > postsTableView.contentSize.height+100-scrollView.frame.size.height) {
-            print("Scroll at bottom...")
             isBottomLoad = true
-            if (postsList.count == maxPostsFetched) {
-                maxPostsFetched += 5
-            }
+            postsTableView.tableFooterView = createLoadingFooter()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if (postsList.count == maxPostsFetched) {
+            maxPostsFetched += 5
+        }
+        if (isBottomLoad) {
             fetchDataWithString("")
         }
     }

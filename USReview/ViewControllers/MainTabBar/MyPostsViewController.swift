@@ -25,18 +25,23 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // data properties
     var postsList = [Post]()
-    
-    //listener
-    var firestoreListener: ListenerRegistration? = nil
-    
     var maxPostsFetched: Int = 5
     
+    // Listener
+    var firestoreListener: ListenerRegistration? = nil
+
     // For loading
     var isBottomLoad: Bool = false
     private let refreshControl = UIRefreshControl()
     
+    // For layout
+    var safeAreaBottomInset: CGFloat = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let window = UIApplication.shared.windows[0]
+        safeAreaBottomInset = window.safeAreaInsets.bottom
 
         refreshControl.tintColor = UIColor.lightGray
         refreshControl.addTarget(self, action: #selector(refetchData), for: .valueChanged)
@@ -58,7 +63,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height
-            containerBottomConstraint.constant = keyboardHeight
+            containerBottomConstraint.constant = keyboardHeight - safeAreaBottomInset
         }
     }
     
@@ -110,7 +115,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func createLoadingFooter() -> UIView {
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: myPostsTableView.frame.size.width, height: 50))
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: myPostsTableView.frame.size.width, height: 60))
         let hudLoading = UIActivityIndicatorView()
         
         footerView.addSubview(hudLoading)
@@ -233,11 +238,16 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
         if (position > myPostsTableView.contentSize.height+100-scrollView.frame.size.height) {
-            print("Scroll at bottom...")
             isBottomLoad = true
-            if (postsList.count == maxPostsFetched) {
-                maxPostsFetched += 5
-            }
+            myPostsTableView.tableFooterView = createLoadingFooter()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if (postsList.count == maxPostsFetched) {
+            maxPostsFetched += 5
+        }
+        if (isBottomLoad) {
             fetchData()
         }
     }
