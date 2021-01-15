@@ -10,31 +10,23 @@ import AdminLayout from "./components/AdminLayout";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
 import Posts from "./pages/Posts";
+import VerifyUsers from "./pages/Users/VerifyUsers";
+import ViewUser from "./pages/Users/ViewUser";
+import ViewPost from "./pages/Posts/ViewPost";
+import ApprovePosts from "./pages/Posts/ApprovePosts";
 
 const Routing = (props) => {
-  // const fetchBlogs = async () => {
-  //   const response = db.collection("users");
-  //   const data = await response.get();
-  //   data.docs.forEach((item) => {
-  //     console.log({ item });
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   fetchBlogs();
-  // }, []);
-
   if (props.isAuthenticated) {
     return (
       <AdminLayout>
         <Switch>
           <Route path="/" exact component={Dashboard} />
           <Route path="/users" exact component={Users} />
-          <Route path="/users/:id" component={Users} />
-          <Route path="/verifyusers" exact component={Users} />
+          <Route path="/users/:id" component={ViewUser} />
+          <Route path="/verifyusers" exact component={VerifyUsers} />
           <Route path="/posts" exact component={Posts} />
-          <Route path="/posts/:id" component={Posts} />
-          <Route path="/approveposts" exact component={Posts} />
+          <Route path="/posts/:id" component={ViewPost} />
+          <Route path="/approveposts" exact component={ApprovePosts} />
           <Route redirect="/" />
         </Switch>
       </AdminLayout>

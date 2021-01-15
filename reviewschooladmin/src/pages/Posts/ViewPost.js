@@ -3,19 +3,17 @@ import { useSelector } from "react-redux";
 import { Link as RouteLink, useParams } from "react-router-dom";
 import { Breadcrumbs, Grid, Link, makeStyles, Typography } from "@material-ui/core";
 import { Home, PeopleAlt } from "@material-ui/icons";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 import PersonIcon from "@material-ui/icons/Person";
-import PostDetail from "../Posts/PostDetail";
+import PostDetail from "./PostDetail";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 
-const avatarImage = "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
-
-function ViewUser(props) {
+function ViewPost(props) {
   const classes = useStyles();
-  const userID = useParams().id;
-  const usersList = useSelector((state) => state.app.usersList);
+  const postID = useParams().id;
   const postsList = useSelector((state) => state.app.postsList);
-  const user = usersList.find((user) => user.userID === userID);
-  const posts = postsList.filter((post) => post.userID === userID);
-  console.log({ userID, user, posts });
+  const post = postsList.find((post) => post.postID === postID);
+  console.log({ post });
 
   return (
     <div>
@@ -26,36 +24,21 @@ function ViewUser(props) {
             Dashboard
           </Typography>
         </Link>
-        <Link color="inherit" to="/users" component={RouteLink} className={classes.link}>
-          <PeopleAlt className={classes.icon} />
+        <Link color="inherit" to="/posts" component={RouteLink} className={classes.link}>
+          <AssignmentTurnedInIcon className={classes.icon} />
           <Typography variant="body1" style={{ color: "inherit" }}>
-            Users
+            Posts
           </Typography>
         </Link>
         <Typography variant="body1" color="textPrimary" className={classes.link}>
-          <PersonIcon className={classes.icon} />
-          View User
+          <AssignmentIcon className={classes.icon} />
+          View Post
         </Typography>
       </Breadcrumbs>
       <div className={classes.container}>
         <Grid container direction="row">
-          <Grid container direction="column" item xs={3} style={{ height: "fit-content" }}>
-            <Grid item xs={12} className={classes.profile}>
-              <img src={avatarImage} width={100} height={100} />
-              <Typography className={classes.name} variant="body1" color="initial">
-                {user.name}
-              </Typography>
-              <Typography className={classes.email} variant="body2" color="initial">
-                {user.email}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid container direction="column" item xs={9}>
-            <Grid item xs={12} className={classes.posts}>
-              {posts.map((post, i) => (
-                <PostDetail key={i} post={post} />
-              ))}
-            </Grid>
+          <Grid item xs={12} className={classes.posts}>
+            <PostDetail post={post} />
           </Grid>
         </Grid>
       </div>
@@ -63,7 +46,7 @@ function ViewUser(props) {
   );
 }
 
-export default ViewUser;
+export default ViewPost;
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -103,7 +86,6 @@ const useStyles = makeStyles((theme) => ({
     background: "#ddd",
     boxShadow: "0 2px 8px grey",
     borderRadius: 8,
-    marginLeft: 25,
     padding: 15,
   },
 }));

@@ -1,121 +1,129 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-function Reviews() {
-  return <html lang="en">
-<head>
-  <meta charset="utf-8"></meta>
-  <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+import Table from "../../components/Table";
+import { Typography, Breadcrumbs, Link, Button, Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Home, PeopleAlt } from "@material-ui/icons";
+import { Link as RouteLink } from "react-router-dom";
+import queryString from "query-string";
+import { useDispatch, useSelector } from "react-redux";
+import actions from "../../redux/app/actions";
+import { userApi } from "../../services";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"></link>
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css"></link>
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></link>
-  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"></link>
-  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css"></link>
-  <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css"></link>
-  <link rel="stylesheet" href="dist/css/adminlte.min.css"></link>
-  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css"></link>
-  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css"></link>
-  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"></link>
-</head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
-    </ul>
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="fas fa-search"></i>
-        </a>
-        <div class="navbar-search-block">
-          <form class="form-inline">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search"></input>
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </li>
-      Messages Dropdown Menu
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            Message Start 
-            <div class="media">
-              <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle"></img>
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            Message End
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            Message Start
-            <div class="media">
-              <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3"></img>
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">I got your message bro</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            Message End
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            Message Start
-            <div class="media">
-              <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3"></img>
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">The subject goes here</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            Message End
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-        </div>
-      </li>
-    </ul>
-  </nav>
-</div>;
-</body>
-</html>
+const useStyles = makeStyles((theme) => ({
+  link: {
+    display: "flex",
+  },
+  icon: {
+    marginRight: theme.spacing(0.5),
+    width: 22,
+    height: 22,
+  },
+  label: {
+    minWidth: 220,
+  },
+  container: {
+    margin: "10px 0",
+    background: "#ddd",
+    boxShadow: "0 2px 8px grey",
+    borderRadius: 8,
+    padding: 15,
+  },
+}));
 
+function VerifyUsers(props) {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const verifyUsers = useSelector((state) => state.app.verifyUsers);
+
+  const searchOptions = props.location.search ? queryString.parse(props.location.search) : null;
+  const generateData = (verifyUsers) => {
+    return (verifyUsers || []).map((user, i) => {
+      const stt = i + 1;
+      const email = user.email;
+      const name = user.name;
+      const verified = user.isVerified === 0 ? "Not Verify" : user.isVerified === 1 ? "Pending" : "Verified";
+      const blocked = user.isBlocked ? "True" : "False";
+      const actions = user.userID;
+      const tableType = "verifyuser";
+      return { stt, email, name, verified, blocked, actions, tableType };
+    });
+  };
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "STT",
+        accessor: "stt",
+      },
+      {
+        Header: "Email",
+        accessor: "email",
+      },
+      {
+        Header: "Name",
+        accessor: "name",
+      },
+      {
+        Header: "Verified",
+        accessor: "verified",
+        disableSortBy: true,
+      },
+      {
+        Header: "Blocked",
+        accessor: "blocked",
+        disableSortBy: true,
+      },
+      {
+        Header: "Actions",
+        accessor: "actions",
+        disableSortBy: true,
+      },
+    ],
+    []
+  );
+  // let users = usersList;
+  // if (searchOptions) {
+  //   const key = Object.keys(searchOptions)[0];
+  //   users = users.filter((item) => item[key].toLowerCase().includes(searchOptions[key].toLowerCase()));
+  // }
+
+  const submitVerifyUser = async (email) => {
+    try {
+      await userApi.verifyUserByEmail(email);
+      dispatch(actions.verifyUserByEmail(email));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleVerifyUser = (userID) => {
+    const user = verifyUsers.find((user) => user.userID === userID);
+    submitVerifyUser(user.email);
+  };
+
+  const data = React.useMemo(() => generateData(verifyUsers), [verifyUsers]);
+
+  return (
+    <div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link color="inherit" to="/" component={RouteLink} className={classes.link}>
+          <Home className={classes.icon} />
+          <Typography variant="body1" style={{ color: "inherit" }}>
+            Dashboard
+          </Typography>
+        </Link>
+        <Typography variant="body1" color="textPrimary" className={classes.link}>
+          <PersonAddIcon className={classes.icon} />
+          Verify Users
+        </Typography>
+      </Breadcrumbs>
+      <div className={classes.container}>
+        <Table columns={columns} data={data} verifyUser={handleVerifyUser} />
+      </div>
+    </div>
+  );
 }
 
-export default Reviews;
+export default VerifyUsers;
