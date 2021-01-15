@@ -35,7 +35,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var searchQueue = OperationQueue()
     
     // For loading
-    var isBottomLoad: Bool = false
+    var isBottomLoading: Bool = false
+    var isTextFieldEditing: Bool = false
+    var isSearching: Bool = false
     private let refreshControl = UIRefreshControl()
     
     var safeAreaBottomInset: CGFloat = 0
@@ -65,10 +67,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        fetchDataWithString("")
+        fetchData()
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
+            self.isTextFieldEditing = true
+        }
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height
             containerBottomConstraint.constant = keyboardHeight - 49 - safeAreaBottomInset
@@ -76,6 +81,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
+            self.isTextFieldEditing = false
+        }
         containerBottomConstraint.constant = 0
     }
     
@@ -88,7 +96,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if indexPath.section == 0 {
             return UITableView.automaticDimension
         } else {
-            return 400
+            return 600
         }
     }
 
@@ -97,7 +105,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             return UITableView.automaticDimension
         }
         else {
-            return 400
+            return 600
         }
     }
     
@@ -128,10 +136,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     // MARK: - fetchData
-    func fetchDataWithString(_ searchString: String) {
+    func fetchData() {
         // Create loading animation
-        if (!isBottomLoad) {
-            hud.textLabel.text = (searchString == "") ? "" : "Searching..."
+        if (!isBottomLoading) {
             hud.show(in: self.view)
         }
         
@@ -146,22 +153,21 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     Toast.show(message: error.localizedDescription, controller: self)
                 }
                 else {
-                    if ((self.postsList.count < (snapshot?.documents.count)! && self.isBottomLoad == true) ||
-                            self.isBottomLoad == false) {
+                    if ((self.postsList.count < (snapshot?.documents.count)! && self.isBottomLoading == true) ||
+                            self.isBottomLoading == false) {
                         self.postsList.removeAll()
                         for document in snapshot!.documents {
                             let post = Post(document as DocumentSnapshot)
-                            if (searchString == "" ? true : ((post.title?.lowercased().contains(searchString.lowercased()))! ? true : false)) {
-                                self.postsList.append(post)
-                            }
+                            self.postsList.append(post)
                             self.presentData()
                         }
                     }
+                    
                     // Disable loading animation
                     self.hud.dismiss()
-                    if (self.isBottomLoad) {
+                    if (self.isBottomLoading) {
                         self.postsTableView.tableFooterView = nil
-                        self.isBottomLoad = false
+                        self.isBottomLoading = false
                         self.postsTableView.reloadData()
                     }
                     
@@ -188,7 +194,60 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
     }
     
+    func fetchDataWithString(_ searchString: String) {
+        // Create loading animation
+        hud.textLabel.text = "Searching..."
+        hud.show(in: self.view)
+        
+        firestoreListener?.remove()
+        firestoreListener = db.collection("posts")
+            .whereField("isVerified", isEqualTo: true)
+            .order(by: "createdDate", descending: true)
+            .addSnapshotListener { (snapshot, error) in
+                if let error = error {
+                    self.hud.dismiss()
+                    Toast.show(message: error.localizedDescription, controller: self)
+                }
+                else {
+                    self.postsList.removeAll()
+                    for document in snapshot!.documents {
+                        let post = Post(document as DocumentSnapshot)
+                        if (searchString == "" ? true : ((post.title?.lowercased().contains(searchString.lowercased()))! ? true : false)) {
+                            self.postsList.append(post)
+                        }
+                        self.presentData()
+                    }
+                    
+                    // Disable loading animation
+                    self.hud.dismiss()
+                    
+                    // Check if postsList is empty
+                    if self.postsList.count == 0 {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 1
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = false
+                        }
+                    }
+                    else {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 0
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = true
+                        }
+                    }
+                }
+            }
+    }
+    
     @objc func refetchData() {
+        isSearching = false
+        postsSearchBar.text = ""
+        postsSearchBar.resignFirstResponder()
         maxPostsFetched = 5
         
         firestoreListener?.remove()
@@ -257,7 +316,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     return
                 }
                 else {
-                    self!.fetchDataWithString(searchText)
+                    if (searchText == "") {
+                        self!.isSearching = false
+                        self!.fetchData()
+                    }
+                    else {
+                        self!.isSearching = true
+                        self!.fetchDataWithString(searchText)
+                    }
                 }
             }
         }
@@ -265,21 +331,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        if (searchBar.text != "") {
-            fetchDataWithString(searchBar.text!)
-        }
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
     }
     
     // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (isTextFieldEditing) {
+            view.endEditing(true)
+        }
         let position = scrollView.contentOffset.y
         if (position > postsTableView.contentSize.height+100-scrollView.frame.size.height) {
-            isBottomLoad = true
-            postsTableView.tableFooterView = createLoadingFooter()
+            isBottomLoading = true
+            if (!isSearching) {
+                postsTableView.tableFooterView = createLoadingFooter()
+            }
         }
     }
     
@@ -287,8 +351,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if (postsList.count == maxPostsFetched) {
             maxPostsFetched += 5
         }
-        if (isBottomLoad) {
-            fetchDataWithString("")
+        if (isBottomLoading && !isSearching) {
+            fetchData()
         }
     }
     

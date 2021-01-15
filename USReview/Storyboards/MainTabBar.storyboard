@@ -224,13 +224,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1pU-1G-VMS" userLabel="Container">
                                 <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Enter a title" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jHN-VO-U3i">
+                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Enter a title" translatesAutoresizingMaskIntoConstraints="NO" id="jHN-VO-U3i">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="56" id="vpG-No-x3p"/>
                                         </constraints>
                                         <color key="tintColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                                 <real key="value" value="0.0"/>

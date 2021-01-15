@@ -31,7 +31,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var firestoreListener: ListenerRegistration? = nil
 
     // For loading
-    var isBottomLoad: Bool = false
+    var isBottomLoading: Bool = false
     private let refreshControl = UIRefreshControl()
     
     // For layout
@@ -128,7 +128,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - fetchData
     func fetchData() {
         // Create loading animation
-        if (isBottomLoad) {
+        if (isBottomLoading) {
             self.myPostsTableView.tableFooterView = createLoadingFooter()
         }
         else {
@@ -146,8 +146,8 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             else {
                 print("Fetched My Posts Data: \(snapshot?.description ?? "")")
-                if ((self.postsList.count < (snapshot?.documents.count)! && self.isBottomLoad == true) ||
-                        self.isBottomLoad == false) {
+                if ((self.postsList.count < (snapshot?.documents.count)! && self.isBottomLoading == true) ||
+                        self.isBottomLoading == false) {
                     self.postsList.removeAll()
                     for document in snapshot!.documents {
                         let post = Post(document as DocumentSnapshot)
@@ -158,7 +158,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 // Disable loading animation
                 self.hud.dismiss()
                 self.myPostsTableView.tableFooterView = nil
-                self.isBottomLoad = false
+                self.isBottomLoading = false
             }
         }
     }
@@ -236,9 +236,10 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        view.endEditing(true)
         let position = scrollView.contentOffset.y
         if (position > myPostsTableView.contentSize.height+100-scrollView.frame.size.height) {
-            isBottomLoad = true
+            isBottomLoading = true
             myPostsTableView.tableFooterView = createLoadingFooter()
         }
     }
@@ -247,7 +248,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if (postsList.count == maxPostsFetched) {
             maxPostsFetched += 5
         }
-        if (isBottomLoad) {
+        if (isBottomLoading) {
             fetchData()
         }
     }
