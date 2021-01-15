@@ -8,7 +8,7 @@ import { Link as RouteLink } from "react-router-dom";
 import queryString from "query-string";
 import AddIcon from "@material-ui/icons/Add";
 import { useDispatch, useSelector } from "react-redux";
-import { userApi } from "../../services";
+import { postApi, userApi } from "../../services";
 import actions from "../../redux/app/actions";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import moment from "moment";
@@ -44,13 +44,13 @@ function Posts(props) {
       const stt = i + 1;
       const title = post.title;
       const author = post.userName;
-      const likes = post.likedUsers ? `${post.likedUsers.length} likes` : "0 like";
+      const likes = post.likedUsers ? `${post.likedUsers.length ? post.likedUsers.length : 0} likes` : "0 like";
       const comments = post.comments ? `${post.comments.length} comments` : "0 comment";
       const verified = post.isVerified ? "Approved" : "Approve Pending";
-      const blocked = post.isBlocked ? "True" : "False";
+      const blocked = post.isVerified ? "True" : "False";
       const actions = post.postID;
       const tableType = "posts";
-      const date = moment(post.createdDate.seconds).format("DD-MM-YYYY hh:mm:ss");
+      const date = moment(post.createdDate.toDate()).format("DD-MM-YYYY hh:mm:ss");
       return { stt, title, author, comments, likes, verified, date, blocked, actions, tableType };
     });
   };
@@ -96,6 +96,19 @@ function Posts(props) {
 
   const data = React.useMemo(() => generateData(postsList), [postsList]);
 
+  const submitBlockPost = async (postID) => {
+    try {
+      await postApi.blockPost(postID);
+      dispatch(actions.blockPost(postID));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBlockPost = (postID) => {
+    submitBlockPost(postID);
+  };
+
   return (
     <div>
       <Breadcrumbs aria-label="breadcrumb">
@@ -111,7 +124,7 @@ function Posts(props) {
         </Typography>
       </Breadcrumbs>
       <div className={classes.container}>
-        <Table columns={columns} data={data} />
+        <Table columns={columns} data={data} blockPost={handleBlockPost} />
       </div>
     </div>
   );

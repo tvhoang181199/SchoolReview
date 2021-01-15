@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import ConfirmModal from "./ConfirmModal";
 import ApprovePosts from "../pages/Posts/ApprovePosts";
 
-function Table({ columns, data, blockUser, verifyUser, approvePosts }) {
+function Table({ columns, data, blockUser, verifyUser, approvePosts, blockPost }) {
   const classes = useStyles();
   const history = useHistory();
   const [open, setOpen] = useState(false);
@@ -64,6 +64,13 @@ function Table({ columns, data, blockUser, verifyUser, approvePosts }) {
     setOpen(true);
   };
 
+  const onBlockPost = (postId) => {
+    setPostId(postId);
+    setMessage("Do you want to block this post ?");
+    setType("blockpost");
+    setOpen(true);
+  };
+
   const handleBlockUser = () => {
     console.log("BLOCK: ", userId);
     blockUser(userId);
@@ -79,6 +86,12 @@ function Table({ columns, data, blockUser, verifyUser, approvePosts }) {
   const handleApprovePost = () => {
     console.log("APRROVE: ", postId);
     approvePosts(postId);
+    setOpen(false);
+  };
+
+  const handleBlockPost = () => {
+    console.log("BLOCK POST", postId);
+    blockPost(postId);
     setOpen(false);
   };
 
@@ -105,8 +118,17 @@ function Table({ columns, data, blockUser, verifyUser, approvePosts }) {
       case "posts":
         return (
           <div className={classes.actions}>
-            <Button variant="contained" size="small" color="primary">
+            <Button onClick={() => history.push(`/posts/${value}`)} variant="contained" size="small" color="primary">
               View
+            </Button>
+            <Button
+              onClick={() => onBlockPost(value)}
+              variant="contained"
+              size="small"
+              color="secondary"
+              disabled={status.blocked === "False"}
+            >
+              {status.blocked === "True" ? "Block" : "Blocked"}
             </Button>
           </div>
         );
@@ -143,6 +165,9 @@ function Table({ columns, data, blockUser, verifyUser, approvePosts }) {
         return;
       case "approvepost":
         handleApprovePost();
+        return;
+      case "blockpost":
+        handleBlockPost();
         return;
       default:
         return;

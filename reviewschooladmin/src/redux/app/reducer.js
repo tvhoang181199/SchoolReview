@@ -47,6 +47,17 @@ export default (state = INITIAL_STATE, action) => {
         ),
         approvePosts: state.approvePosts.filter((post) => post.postID !== action.payload),
       };
+    case types.BLOCK_POST:
+      return {
+        ...state,
+        postsList: state.postsList.map((post) =>
+          post.postID === action.payload ? { ...post, isVerified: false } : post
+        ),
+        approvePosts: state.approvePosts.push({
+          ...state.postsList.find((post) => post.postID === action.payload),
+          isVerified: false,
+        }),
+      };
     default:
       return state;
   }

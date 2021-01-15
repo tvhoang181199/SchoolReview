@@ -15,9 +15,12 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    marginBottom: 20,
+  },
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
@@ -37,12 +40,21 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     borderBottom: "1px solid #ddd",
-    background: "#efca19",
+    background: "#adadad",
     color: "white",
+  },
+  content: {
+    padding: "8px 16px",
+    borderBottom: "1px solid #ddd",
+    maxHeight: 200,
+    overflowY: "auto",
+  },
+  comments: {
+    padding: "0 24px 10px",
   },
 }));
 
-export default function PostDetail() {
+export default function PostDetail({ post }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -50,27 +62,29 @@ export default function PostDetail() {
     setExpanded(!expanded);
   };
 
+  console.log({ post });
+
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
-            P
+            {post.userName[0]}
           </Avatar>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={post.title}
+        subheader={moment(post.createdDate.toDate()).format("DD-MM-YYYY hh:mm:ss")}
+        className={classes.header}
       />
-      <CardContent style={{ padding: "8px 16px", borderBottom: "1px solid #ddd" }}>
+      <CardContent className={classes.content}>
         <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of
-          frozen peas along with the mussels, if you like.
+          {post.content}
         </Typography>
       </CardContent>
       <CardActions style={{ padding: "0 8px" }} disableSpacing>
         <IconButton aria-label="add to favorites">
           <Typography variant="body1" style={{ margin: "0 3px" }} color="initial">
-            5
+            {(post.likedUser || []).length}
           </Typography>
           <FavoriteIcon />
         </IconButton>
@@ -86,11 +100,18 @@ export default function PostDetail() {
         </IconButton>
 
         <Typography variant="subtitle2" color="initial">
-          5 comments
+          {(post.comments || []).length} comments
         </Typography>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent></CardContent>
+        <CardContent className={classes.comments}>
+          {(post.comments || []).map((comment, i) => (
+            <div key={i}>
+              <span style={{ fontWeight: "bold" }}>{comment.userName}: </span>
+              <span>{comment.content}</span>
+            </div>
+          ))}
+        </CardContent>
       </Collapse>
     </Card>
   );

@@ -12,8 +12,10 @@ function ViewUser(props) {
   const classes = useStyles();
   const userID = useParams().id;
   const usersList = useSelector((state) => state.app.usersList);
+  const postsList = useSelector((state) => state.app.postsList);
   const user = usersList.find((user) => user.userID === userID);
-  console.log({ userID, user });
+  const posts = postsList.filter((post) => post.userID === userID);
+  console.log({ userID, user, posts });
 
   return (
     <div>
@@ -37,7 +39,7 @@ function ViewUser(props) {
       </Breadcrumbs>
       <div className={classes.container}>
         <Grid container direction="row">
-          <Grid container direction="column" item xs={3}>
+          <Grid container direction="column" item xs={3} style={{ height: "fit-content" }}>
             <Grid item xs={12} className={classes.profile}>
               <img src={avatarImage} width={100} height={100} />
               <Typography className={classes.name} variant="body1" color="initial">
@@ -50,7 +52,9 @@ function ViewUser(props) {
           </Grid>
           <Grid container direction="column" item xs={9}>
             <Grid item xs={12} className={classes.posts}>
-              <PostDetail />
+              {posts.map((post, i) => (
+                <PostDetail key={i} post={post} />
+              ))}
             </Grid>
           </Grid>
         </Grid>

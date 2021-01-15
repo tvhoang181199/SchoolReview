@@ -82,7 +82,8 @@ const SearchUser = (props) => {
     setOpen(false);
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     const searchContent = searchRef.current.value;
     if (searchContent) {
       const query = { [option]: searchContent };
@@ -90,13 +91,13 @@ const SearchUser = (props) => {
         pathname: "/users",
         search: qs.stringify(query),
       });
-      searchRef.current.value = "";
-      setOption("email");
+    } else {
+      props.history.push("/users");
     }
   };
 
   return (
-    <Paper component="form" className={classes.root}>
+    <Paper component="form" className={classes.root} onSubmit={handleSearch}>
       <InputBase className={classes.input} placeholder="Search Users" inputRef={searchRef} />
       <Divider className={classes.divider} orientation="vertical" />
       <IconButton className={classes.iconButton} aria-label="menu" ref={anchorRef} onClick={handleToggle}>

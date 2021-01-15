@@ -15,4 +15,8 @@ export default {
     const response = await db.collection("posts").doc(postID).update({ isVerified: true });
     return response;
   },
+  blockPost: async (postID) => {
+    const response = await db.collection("posts").doc(postID).update({ isVerified: false });
+    return response;
+  },
 };
