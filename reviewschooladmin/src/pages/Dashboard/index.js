@@ -98,7 +98,7 @@ const Dashboard = (props) => {
                 <div className="icon">
                   <PersonAddIcon />
                 </div>
-                <Link to="/users" className="small-box-footer" component={RouterLink}>
+                <Link to="/verifyusers" className="small-box-footer" component={RouterLink}>
                   More info
                 </Link>
               </div>
@@ -128,7 +128,7 @@ const Dashboard = (props) => {
                 <div className="icon">
                   <PostAddIcon />
                 </div>
-                <Link to="/users" className="small-box-footer" component={RouterLink}>
+                <Link to="/approveposts" className="small-box-footer" component={RouterLink}>
                   More info
                 </Link>
               </div>
