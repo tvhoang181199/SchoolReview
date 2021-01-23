@@ -342,7 +342,6 @@ PODS:
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
-  - ObjectMapper (4.2.0)
   - PromisesObjC (1.2.10)
   - SCLAlertView (0.8)
 
@@ -354,7 +353,6 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Storage
   - JGProgressHUD
-  - ObjectMapper
   - SCLAlertView (~> 0.8)
 
 SPEC REPOS:
@@ -379,7 +377,6 @@ SPEC REPOS:
     - JGProgressHUD
     - leveldb-library
     - nanopb
-    - ObjectMapper
     - PromisesObjC
     - SCLAlertView
 
@@ -404,10 +401,9 @@ SPEC CHECKSUMS:
   JGProgressHUD: aa403e9a5b45cae98903c4600cccdd98c0c3ec90
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
-  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
 
-PODFILE CHECKSUM: 8fcc9d2dc41c6ea167d9505c54a3bee7f6f7a19f
+PODFILE CHECKSUM: ceb643174a744837b08af454d30500c3dcc9b77b
 
 COCOAPODS: 1.10.0

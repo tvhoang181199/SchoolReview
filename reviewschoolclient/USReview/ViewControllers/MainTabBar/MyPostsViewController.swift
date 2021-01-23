@@ -34,6 +34,9 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var isBottomLoading: Bool = false
     private let refreshControl = UIRefreshControl()
     
+    // Textfields handler
+    var isTextFieldEditing: Bool = false
+    
     // For layout
     var safeAreaBottomInset: CGFloat = 0
     
@@ -61,6 +64,9 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
+            self.isTextFieldEditing = true
+        }
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height
             containerBottomConstraint.constant = keyboardHeight - safeAreaBottomInset
@@ -68,6 +74,9 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
+            self.isTextFieldEditing = false
+        }
         containerBottomConstraint.constant = 0
     }
     
@@ -155,10 +164,14 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         self.presentData()
                     }
                 }
+                
                 // Disable loading animation
                 self.hud.dismiss()
-                self.myPostsTableView.tableFooterView = nil
-                self.isBottomLoading = false
+                if (self.isBottomLoading) {
+                    self.myPostsTableView.tableFooterView = nil
+                    self.isBottomLoading = false
+                    self.myPostsTableView.reloadData()
+                }
             }
         }
     }
@@ -236,7 +249,9 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        view.endEditing(true)
+        if (isTextFieldEditing) {
+            view.endEditing(true)
+        }
         let position = scrollView.contentOffset.y
         if (position > myPostsTableView.contentSize.height+100-scrollView.frame.size.height) {
             isBottomLoading = true
