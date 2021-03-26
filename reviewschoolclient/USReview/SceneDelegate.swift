@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let _ = (scene as? UIWindowScene) else { return }
         
-        if (Auth.auth().currentUser != nil) {
+        if (Auth.auth().currentUser != nil && UserDefaults.standard.string(forKey: "userID") != nil) {
             let mainTabBarController = UIStoryboard.mainTabBarController()
             window?.rootViewController = mainTabBarController
         }

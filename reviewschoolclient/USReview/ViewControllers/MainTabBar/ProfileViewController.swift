@@ -35,7 +35,6 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         _setupUI()
-        
         if (currentUser.integer(forKey: "isVerified") == 2) {
             presentData()
         }
