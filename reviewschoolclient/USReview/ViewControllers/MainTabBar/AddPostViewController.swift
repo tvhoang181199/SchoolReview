@@ -13,7 +13,7 @@ import FirebaseAuth
 import SCLAlertView
 import JGProgressHUD
 
-class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBlockedProtocol {
+class AddPostViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var titleLabel: UILabel!
     
@@ -65,8 +65,12 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
         layoutGuide = view.safeAreaLayoutGuide
         safeViewHeight = layoutGuide.layoutFrame.size.height
         
+        // Observe keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // Observe user was blocked or not
+        NotificationCenter.default.addObserver(self, selector: #selector(userWasBlocked(notification:)), name: Notification.Name("UserWasBlocked"), object: nil)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -80,6 +84,19 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
     @objc func keyboardWillHide(notification: NSNotification) {
         contentViewBottomConstraint.constant = 15
         containerHeightConstraint.constant = safeViewHeight - 50
+    }
+    
+    @objc func userWasBlocked(notification: NSNotification) {
+        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+        alertView.addButton("OK") {
+            if let appDomain = Bundle.main.bundleIdentifier {
+                self.currentUser.removePersistentDomain(forName: appDomain)
+            }
+            try! Auth.auth().signOut()
+            let loginNavigationController = UIStoryboard.loginNavigationController()
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
+        }
+        alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
     }
     
     // MARK: - UIButton actions
@@ -212,19 +229,5 @@ class AddPostViewController: UIViewController, UITextViewDelegate, CheckUserBloc
             textView.tintColor = UIColor.init(red: 42/255, green: 51/255, blue: 66/255, alpha: 1)
         }
 
-    }
-    
-    // MARK: - Check User Blocked Protocol
-    func userWasBlocked() {
-        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
-        alertView.addButton("OK") {
-            if let appDomain = Bundle.main.bundleIdentifier {
-                self.currentUser.removePersistentDomain(forName: appDomain)
-            }
-            try! Auth.auth().signOut()
-            let loginNavigationController = UIStoryboard.loginNavigationController()
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
-        }
-        alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
     }
 }

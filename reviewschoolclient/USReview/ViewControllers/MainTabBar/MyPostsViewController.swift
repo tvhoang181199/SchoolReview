@@ -13,10 +13,12 @@ import FirebaseAuth
 import JGProgressHUD
 import SCLAlertView
 
-class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, PostCellProtocol, CheckUserBlockedProtocol {
+class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, PostCellProtocol {
 
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var myPostsTableView: UITableView!
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var emptyPostLabel: UILabel!
     
     // quick access properties
     let currentUser = UserDefaults.standard
@@ -45,10 +47,13 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let window = UIApplication.shared.windows[0]
         safeAreaBottomInset = window.safeAreaInsets.bottom
+        
+        emptyPostLabel.alpha = 1
+        emptyPostLabel.isHidden = true
 
         refreshControl.tintColor = UIColor.lightGray
         refreshControl.addTarget(self, action: #selector(refetchData), for: .valueChanged)
-        myPostsTableView.addSubview(refreshControl)
+        myPostsTableView.refreshControl = refreshControl
         
         myPostsTableView.delegate = self
         myPostsTableView.dataSource = self
@@ -57,8 +62,12 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         myPostsTableView.contentInset = UIEdgeInsets(top:10, left: 0, bottom: 15, right: 0)
         myPostsTableView.reloadData()
         
+        // Observe keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // Observe user was blocked or not
+        NotificationCenter.default.addObserver(self, selector: #selector(userWasBlocked(notification:)), name: Notification.Name("UserWasBlocked"), object: nil)
         
         fetchData()
     }
@@ -78,6 +87,19 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.isTextFieldEditing = false
         }
         containerBottomConstraint.constant = 0
+    }
+    
+    @objc func userWasBlocked(notification: NSNotification) {
+        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
+        alertView.addButton("OK") {
+            if let appDomain = Bundle.main.bundleIdentifier {
+                self.currentUser.removePersistentDomain(forName: appDomain)
+            }
+            try! Auth.auth().signOut()
+            let loginNavigationController = UIStoryboard.loginNavigationController()
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
+        }
+        alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
     }
     
     func presentData() {
@@ -172,6 +194,26 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.isBottomLoading = false
                     self.myPostsTableView.reloadData()
                 }
+                
+                // Check if postsList is empty
+                if self.postsList.count == 0 {
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0.1,
+                                   options: .curveEaseOut) {
+                        self.emptyPostLabel.alpha = 1
+                    } completion: { (value) in
+                        self.emptyPostLabel.isHidden = false
+                    }
+                }
+                else {
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0.1,
+                                   options: .curveEaseOut) {
+                        self.emptyPostLabel.alpha = 0
+                    } completion: { (value) in
+                        self.emptyPostLabel.isHidden = true
+                    }
+                }
             }
         }
     }
@@ -181,7 +223,7 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         firestoreListener?.remove()
         firestoreListener = db.collection("posts")
-            .whereField("isVerified", isEqualTo: true)
+            .whereField("userID", isEqualTo: currentUser.string(forKey: "userID")!)
             .order(by: "createdDate", descending: true)
             .limit(to: maxPostsFetched)
             .addSnapshotListener { (snapshot, error) in
@@ -199,6 +241,26 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     // Disable loading animation
                     self.refreshControl.endRefreshing()
+                    
+                    // Check if postsList is empty
+                    if self.postsList.count == 0 {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 1
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = false
+                        }
+                    }
+                    else {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 0
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = true
+                        }
+                    }
                 }
             }
     }
@@ -233,39 +295,28 @@ class MyPostsViewController: UIViewController, UITableViewDelegate, UITableViewD
         alertView.showWarning("Warning", subTitle: "Do you want to delete this comment?")
     }
     
-    // MARK: - Check User Blocked Protocol
-    func userWasBlocked() {
-        let alertView = SCLAlertView(appearance: SCLAlertView.SCLAppearance(showCloseButton: false))
-        alertView.addButton("OK") {
-            if let appDomain = Bundle.main.bundleIdentifier {
-                self.currentUser.removePersistentDomain(forName: appDomain)
-            }
-            try! Auth.auth().signOut()
-            let loginNavigationController = UIStoryboard.loginNavigationController()
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavigationController!)
-        }
-        alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
-    }
-    
     // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (isTextFieldEditing) {
-            view.endEditing(true)
-        }
-        let position = scrollView.contentOffset.y
-        if (position > myPostsTableView.contentSize.height+100-scrollView.frame.size.height) {
-            isBottomLoading = true
-            myPostsTableView.tableFooterView = createLoadingFooter()
+        if (scrollView == myPostsTableView) {
+            if (isTextFieldEditing) {
+                view.endEditing(true)
+            }
+            let position = scrollView.contentOffset.y
+            if (position > myPostsTableView.contentSize.height+100-scrollView.frame.size.height && myPostsTableView.contentSize.height > containerView.frame.size.height) {
+                isBottomLoading = true
+                myPostsTableView.tableFooterView = createLoadingFooter()
+            }
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if (postsList.count == maxPostsFetched) {
-            maxPostsFetched += 5
-        }
-        if (isBottomLoading) {
-            fetchData()
+        if (scrollView == myPostsTableView) {
+            if (postsList.count == maxPostsFetched) {
+                maxPostsFetched += 5
+            }
+            if (isBottomLoading) {
+                fetchData()
+            }
         }
     }
-    
 }

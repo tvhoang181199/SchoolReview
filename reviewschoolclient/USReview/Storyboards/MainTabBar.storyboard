@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPA-C0-6nc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPA-C0-6nc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -293,6 +293,7 @@
                     </tabBarItem>
                     <connections>
                         <outlet property="containerBottomConstraint" destination="LMF-AD-gff" id="E86-2a-65p"/>
+                        <outlet property="containerView" destination="1pU-1G-VMS" id="wHv-JT-kla"/>
                         <outlet property="emptyPostLabel" destination="tDU-vg-fX7" id="zwn-iV-Qgk"/>
                         <outlet property="postsSearchBar" destination="jHN-VO-U3i" id="pB5-dR-iKf"/>
                         <outlet property="postsTableView" destination="3lV-om-bwj" id="t8z-P0-rFi"/>
@@ -545,7 +546,7 @@
                                 <color key="textColor" red="0.15844202039999999" green="0.19847112889999999" blue="0.2627537251" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agW-H4-8GE">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agW-H4-8GE" userLabel="Container">
                                 <rect key="frame" x="0.0" y="94" width="414" height="768"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Ri1-eF-oAq">
@@ -556,13 +557,24 @@
                                             <outlet property="delegate" destination="spy-1b-bRo" id="c77-WL-uPP"/>
                                         </connections>
                                     </tableView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No posts found!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oom-Ud-SYU">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="768"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="25"/>
+                                        <color key="textColor" systemColor="systemGray2Color"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="Ri1-eF-oAq" firstAttribute="top" secondItem="agW-H4-8GE" secondAttribute="top" id="DBG-0s-g00"/>
                                     <constraint firstAttribute="bottom" secondItem="Ri1-eF-oAq" secondAttribute="bottom" id="IrG-m6-jaH"/>
+                                    <constraint firstAttribute="bottom" secondItem="Oom-Ud-SYU" secondAttribute="bottom" id="JQc-a8-aA9"/>
                                     <constraint firstItem="Ri1-eF-oAq" firstAttribute="leading" secondItem="agW-H4-8GE" secondAttribute="leading" id="TT3-i8-AVu"/>
                                     <constraint firstAttribute="trailing" secondItem="Ri1-eF-oAq" secondAttribute="trailing" id="bB4-p6-oqy"/>
+                                    <constraint firstItem="Oom-Ud-SYU" firstAttribute="top" secondItem="agW-H4-8GE" secondAttribute="top" id="cwc-Xy-xwg"/>
+                                    <constraint firstItem="Oom-Ud-SYU" firstAttribute="leading" secondItem="agW-H4-8GE" secondAttribute="leading" id="vEc-SX-ADV"/>
+                                    <constraint firstAttribute="trailing" secondItem="Oom-Ud-SYU" secondAttribute="trailing" id="xAy-fm-8V5"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -582,6 +594,8 @@
                     </view>
                     <connections>
                         <outlet property="containerBottomConstraint" destination="uE2-0x-mwi" id="avK-J3-1Fw"/>
+                        <outlet property="containerView" destination="agW-H4-8GE" id="9uA-sY-Ior"/>
+                        <outlet property="emptyPostLabel" destination="Oom-Ud-SYU" id="QV5-fb-6HQ"/>
                         <outlet property="myPostsTableView" destination="Ri1-eF-oAq" id="5Ze-0H-Q8q"/>
                     </connections>
                 </viewController>

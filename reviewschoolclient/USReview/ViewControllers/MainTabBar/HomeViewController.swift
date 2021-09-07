@@ -14,6 +14,7 @@ import JGProgressHUD
 
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, PostCellProtocol, UIScrollViewDelegate {
 
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var postsTableView: UITableView!
     @IBOutlet weak var postsSearchBar: UISearchBar!
     @IBOutlet weak var emptyPostLabel: UILabel!
@@ -57,7 +58,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Setup tableview
         refreshControl.tintColor = UIColor.lightGray
         refreshControl.addTarget(self, action: #selector(refetchData), for: .valueChanged)
-        postsTableView.addSubview(refreshControl)
+        postsTableView.refreshControl = refreshControl
         
         postsTableView.delegate = self
         postsTableView.dataSource = self
@@ -272,6 +273,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self.refreshControl.endRefreshing()
                     }
+                    
+                    // Check if postsList is empty
+                    if self.postsList.count == 0 {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 1
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = false
+                        }
+                    }
+                    else {
+                        UIView.animate(withDuration: 0.3,
+                                       delay: 0.1,
+                                       options: .curveEaseOut) {
+                            self.emptyPostLabel.alpha = 0
+                        } completion: { (value) in
+                            self.emptyPostLabel.isHidden = true
+                        }
+                    }
                 }
             }
     }
@@ -335,24 +356,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (isTextFieldEditing) {
-            view.endEditing(true)
-        }
-        let position = scrollView.contentOffset.y
-        if (position > postsTableView.contentSize.height+100-scrollView.frame.size.height) {
-            isBottomLoading = true
-            if (!isSearching) {
-                postsTableView.tableFooterView = createLoadingFooter()
+        if (scrollView == postsTableView) {
+            if (isTextFieldEditing) {
+                view.endEditing(true)
+            }
+            
+            let position = scrollView.contentOffset.y
+            if (position > postsTableView.contentSize.height+100-scrollView.frame.size.height && postsTableView.contentSize.height > containerView.frame.size.height) {
+                isBottomLoading = true
+                if (!isSearching) {
+                    postsTableView.tableFooterView = createLoadingFooter()
+                }
             }
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if (postsList.count == maxPostsFetched) {
-            maxPostsFetched += 5
-        }
-        if (isBottomLoading && !isSearching) {
-            fetchData()
+        if (scrollView == postsTableView) {
+            if (postsList.count == maxPostsFetched) {
+                maxPostsFetched += 5
+            }
+            if (isBottomLoading && !isSearching) {
+                fetchData()
+            }
         }
     }
     

@@ -12,13 +12,7 @@ import FirebaseAuth
 
 import SCLAlertView
 
-protocol CheckUserBlockedProtocol {
-    func userWasBlocked()
-}
-
 class MainTabBarController: UITabBarController {
-    
-    var isUserBlockedListener: CheckUserBlockedProtocol!
     
     // Quick access properties
     let currentUser = UserDefaults.standard
@@ -57,7 +51,6 @@ class MainTabBarController: UITabBarController {
         else {
             let vc = UIStoryboard.addPostViewController()
             vc!.modalPresentationStyle = .fullScreen
-//            self.isUserBlockedListener = vc
             self.present(vc!, animated: true, completion: nil)
         }
     }
@@ -86,8 +79,7 @@ class MainTabBarController: UITabBarController {
                         alertView.showWarning("Warning", subTitle: "Your account has been blocked by admin. Your session has been stopped.")
                     }
                     else {
-                        self.isUserBlockedListener = topMostVC as? CheckUserBlockedProtocol
-                        self.isUserBlockedListener.userWasBlocked()
+                        NotificationCenter.default.post(name: Notification.Name("UserWasBlocked"), object: nil)
                     }
                     
                 }
